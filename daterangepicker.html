@@ -1,0 +1,132 @@
+<input type="text" id="{{$ctrl.inputId}}" class="form-control" ng-model="$ctrl.daterangeInputValue" ng-focus="$ctrl.isShowing=true">
+<div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}}" ng-class="$ctrl.getDaterangepickerClasses()">
+  <div class="calendar left">
+      <div class="daterangepicker_input">
+        <input class="input-mini form-control" type="text" name="daterangepicker_start" ng-focus="$ctrl.rightInputHasFocus=false; $ctrl.leftInputHasFocus=true" ng-class="{active: $ctrl.endDate}" ng-model="$ctrl.daterangepickerStart"/>
+        <i ng-click="$ctrl.renderCalendar()" class="fa fa-calendar glyphicon glyphicon-calendar"></i>
+        <div class="calendar-time" ng-show="$ctrl.timePicker">
+          <div ng-if="$ctrl.timePicker">
+            <select ng-model="$ctrl.hourLeftValue" class="hourselect" ng-init="$ctrl.hourLeftValue='12'">
+              <option ng-repeat="h in $ctrl.hourRange(start, end)" ng-disabled="$ctrl.outputHourDisabled(h)">{{h}}</option>
+            </select>
+            :
+            <select ng-model="$ctrl.minuteLeftValue" class="minuteselect" ng-init="$ctrl.minuteLeftValue='00'">
+              <option ng-repeat="m in $ctrl.minuteRange(start, end)" ng-disabled="$ctrl.outputMinuteDisabled(m)">{{m}}</option>
+            </select>
+            :
+            <select ng-model="$ctrl.secondLeftValue" class="secondselect" ng-init="$ctrl.secondLeftValue='00'">
+              <option ng-repeat="s in $ctrl.secondRange(start, end)" ng-disabled="$ctrl.outputSecondDisabled(s)">{{s}}</option>
+            </select>
+            <select ng-if="!$ctrl.timePicker24Hour" class="ampmselect" ng-model="$ctrl.ampmLeftValue" ng-init="$ctrl.ampmLeftValue='am'">
+              <option ng-disabled="$ctrl.outputAMPMDisabled('am')" class="{{$ctrl.left.AMDisabledClass}}" value="am">AM</option>
+              <option ng-disabled="$ctrl.outputAMPMDisabled('pm')" class="{{$ctrl.left.PMDisabledClass}}" value="pm">PM</option>
+            </select>
+          </div>
+          <i class="fa fa-clock-o glyphicon glyphicon-time"></i>
+        </div>
+      </div>
+      <div class="calendar-table">
+        <table class="table-condensed">
+          <thead>
+            <tr>
+              <th ng-if="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers"></th>
+              <th ng-if="!$ctrl.minDate || $ctrl.minDate.isBefore($ctrl.left.calendar.firstDay)" ng-click="$ctrl.clickPrev('left')" class="prev available"><i class="fa fa-{{$ctrl.arrow.left}} glyphicon glyphicon-{{$ctrl.arrow.left}}"></i></th>
+              <th colspan="5" class="month">
+                <!-- If we are not showing dropdowns, just output plain text -->
+                <div ng-if="!$ctrl.showDropdowns">{{$ctrl.locale.monthNames[$ctrl.left.calendar[1][1].date.month()] + $ctrl.left.calendar[1][1].date.format(" YYYY")}}</div>
+                <!-- If we are showing dropdowns, just output appropriate select inputs -->
+                <select ng-if="$ctrl.showDropdowns" class="monthselect" ng-model="$ctrl.left.selectedMonth" ng-change="$ctrl.clickDropdownMonth('left', $ctrl.left.selectedMonth)" ng-init="$ctrl.left.selectedMonth=$ctrl.left.calendar.month.month()+''">
+                  <option ng-repeat="i in $ctrl.getArrayWithNumbersBetween(-1, 12)" ng-disabled="!(!$ctrl.left.inMinYear || i >= $ctrl.left.minDate.month()) && (!$ctrl.left.inMaxYear || i <= $ctrl.left.maxDate.month())" value="{{i}}">{{$ctrl.locale.monthNames[i]}}</option>
+                </select>
+
+                <select ng-if="$ctrl.showDropdowns" class="yearselect" ng-model="$ctrl.left.selectedYear" ng-change="$ctrl.clickDropdownYear('left', $ctrl.left.selectedYear)" ng-init="$ctrl.left.selectedYear=$ctrl.left.calendar.month.year()+''">
+                  <option ng-repeat="y in $ctrl.getArrayWithNumbersBetween($ctrl.minDate.year()-1, $ctrl.maxDate.year()+1)" value="{{y}}">
+                    {{y}}
+                  </option>
+                </select>
+              </th>
+              <th ng-hide="(!$ctrl.maxDate || $ctrl.maxDate.isAfter($ctrl.left.calendar.lastDay)) && (!$ctrl.linkedCalendars || $ctrl.singleDatePicker)" ng-click="$ctrl.clickNext('left')" class="next available"><i class="fa fa-{{$ctrl.arrow.right}} glyphicon glyphicon-{{$ctrl.arrow.right}}"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="row in $ctrl.getArrayWithNumbersBetween(-1, 6)">
+              <!-- if showWeekNumbers, then show week, else if showISOWeekNumbers, show isoWeek, else nothing -->
+              <td ng-if="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers" class="week">{{$ctrl.showWeekNumbers ? $ctrl.left.calendar[row][0].date.week() : ($ctrl.showISOWeekNumbers ? $ctrl.left.calendar[row][0].date.isoWeek() : "")}}</td>
+              <td ng-mouseenter="$ctrl.hoverDate(row, col, 'left')" ng-mousedown="$ctrl.clickDate(row, col, 'left')" data-title="r{{row}}c{{col}}" ng-class="$ctrl.getClassesForDay(row, col, 'left')" class="{{$ctrl.left.inRangeDays[row][col]}}" ng-repeat="col in $ctrl.getArrayWithNumbersBetween(-1, 7)">
+                {{$ctrl.left.calendar[row][col].date.date()}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+
+  <div class="calendar right">
+      <div class="daterangepicker_input">
+        <input class="input-mini form-control" type="text" ng-focus="$ctrl.rightInputHasFocus=true; $ctrl.leftInputHasFocus=false" name="daterangepicker_end" ng-class="{active: !$ctrl.endDate}" ng-model="$ctrl.daterangepickerEnd"/>
+        <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
+        <div class="calendar-time" ng-show="$ctrl.timePicker">
+          <div ng-if="$ctrl.timePicker">
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-model="$ctrl.hourRightValue" class="hourselect" ng-init="$ctrl.hourRightValue='12'">
+              <option ng-repeat="h in $ctrl.hourRange(start, end)" ng-disabled="$ctrl.outputHourDisabled(h)">{{h}}</option>
+            </select>
+            :
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-model="$ctrl.minuteRightValue" class="minuteselect" ng-init="$ctrl.minuteRightValue='00'">
+              <option ng-repeat="m in $ctrl.minuteRange(start, end)" ng-disabled="$ctrl.outputMinuteDisabled(m)">{{m}}</option>
+            </select>
+            :
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-model="$ctrl.secondRightValue" class="secondselect" ng-init="$ctrl.secondRightValue='00'">
+              <option ng-repeat="s in $ctrl.secondRange(start, end)" ng-disabled="$ctrl.outputSecondDisabled(s)">{{s}}</option>
+            </select>
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-if="!$ctrl.timePicker24Hour" class="ampmselect" ng-model="$ctrl.ampmRightValue" ng-init="$ctrl.ampmRightValue='am'">
+              <option ng-disabled="$ctrl.outputAMPMDisabled('am')" class="{{$ctrl.right.AMDisabledClass}}" value="am">AM</option>
+              <option ng-disabled="$ctrl.outputAMPMDisabled('pm')" class="{{$ctrl.right.PMDisabledClass}}" value="pm">PM</option>
+            </select>
+          </div>
+          <i class="fa fa-clock-o glyphicon glyphicon-time"></i>
+        </div>
+      </div>
+      <div class="calendar-table">
+        <table class="table-condensed">
+          <thead>
+            <tr>
+              <th ng-show="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers"></th>
+              <th ng-hide="(!$ctrl.minDate || $ctrl.minDate.isBefore($ctrl.right.calendar.firstDay)) && (!$ctrl.linkedCalendars)" ng-click="$ctrl.clickPrev('right')" class="prev available"><i class="fa fa-{{$ctrl.arrow.left}} glyphicon glyphicon-{{$ctrl.arrow.left}}"></i></th>
+              <th colspan="5" class="month">
+                <!-- If we are not showing dropdowns, just output plain text -->
+                <div ng-show="!$ctrl.showDropdowns">{{$ctrl.locale.monthNames[$ctrl.right.calendar[1][1].date.month()] + $ctrl.right.calendar[1][1].date.format(" YYYY")}}</div>
+                <!-- If we are showing dropdowns, just output appropriate select inputs -->
+                <select ng-show="$ctrl.showDropdowns" class="monthselect" ng-model="$ctrl.right.selectedMonth" ng-change="$ctrl.clickDropdownMonth('right', $ctrl.right.selectedMonth)" ng-init="$ctrl.right.selectedMonth=$ctrl.right.calendar.month.month()+''">
+                  <option  ng-repeat="i in $ctrl.getArrayWithNumbersBetween(-1, 12)" ng-disabled="!(!$ctrl.right.inMinYear || i >= $ctrl.right.minDate.month()) && (!$ctrl.right.inMaxYear || i <= $ctrl.right.maxDate.month())" value="{{i}}">{{$ctrl.locale.monthNames[i]}}</option>
+                </select>
+                <select ng-show="$ctrl.showDropdowns" class="yearselect" ng-model="$ctrl.right.selectedYear" ng-change="$ctrl.clickDropdownYear('right', $ctrl.right.selectedYear)" ng-init="$ctrl.right.selectedYear=$ctrl.right.calendar.month.year()+''">
+                  <option ng-repeat="y in $ctrl.getArrayWithNumbersBetween($ctrl.minDate.year() - 1, $ctrl.maxDate.year() + 1)">{{y}}</option>
+                </select>
+              </th>
+              <th ng-show="!$ctrl.maxDate || $ctrl.maxDate.isAfter($ctrl.right.calendar.lastDay)" ng-click="$ctrl.clickNext('right')" class="next available"><i class="fa fa-{{$ctrl.arrow.right}} glyphicon glyphicon-{{$ctrl.arrow.right}}"></i></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="row in $ctrl.getArrayWithNumbersBetween(-1, 6)">
+              <!-- if showWeekNumbers, then show week, else if showISOWeekNumbers, show isoWeek, else nothing -->
+              <td ng-show="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers" class="week">{{$ctrl.showWeekNumbers ? $ctrl.right.calendar[row][0].date.week() : ($ctrl.showISOWeekNumbers ? $ctrl.right.calendar[row][0].date.isoWeek() : "")}}</td>
+              <td ng-mouseenter="$ctrl.hoverDate(row, col, 'right')" ng-mousedown="$ctrl.clickDate(row, col, 'right')" data-title="r{{row}}c{{col}}" ng-class="$ctrl.getClassesForDay(row, col, 'right')" ng-repeat="col in $ctrl.getArrayWithNumbersBetween(-1, 7)">
+                {{$ctrl.right.calendar[row][col].date.date()}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+
+
+  <div class="ranges">
+      <div class="range_inputs">
+          <ul>
+            <li ng-repeat="range in $ctrl.ranges" data-range-key="range">{{range}}</li>
+            <li data-range-key="{{$ctrl.ranges.length + 1}}">Custom Range</li>
+          </ul>
+      </div>
+  </div>
+</div>
