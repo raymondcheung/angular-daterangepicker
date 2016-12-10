@@ -55,13 +55,15 @@ Coming soon!
 - isCustomDate: (function) A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.
 - autoUpdateInput: (boolean) Indicates whether the date range picker should automatically update the value of an <input> element it's attached to at initialization and when the selected dates change.
 
-## Unsupported(configurations from Bootstrap Daterange Picker that will not be ported)
+# Unsupported(configurations from Bootstrap Daterange Picker that will not be ported)
 - parentEl
-## Unsupported(no decision yet on whether it will be worked on)
+
+# Unsupported(no decision yet on whether it will be worked on)
 - autoApply
 - applyClass
 - cancelClass
-## Not yet fully implemented
+
+# Not yet fully implemented
 - opens
 - drops
 - showDropdowns
@@ -75,7 +77,8 @@ Coming soon!
 - ranges (with example predefined ranges)
 - alwaysShowCalendars
 - showCustomRangeLabel
-## Currently functional
+
+# Currently functional
 - startDate
 - endDate
 - minDate
