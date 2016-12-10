@@ -76,19 +76,6 @@ require(['angular', 'moment'], function(angular, moment) {
           });
         });
 
-        // TODO:
-        // move this to demo code
-        if ( self.options.ranges === true) {
-          self.options.ranges = {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-          };
-        }
-
         self.getDaterangepickerClasses = function() {
           var classes = [];
           classes.push('opens' + self.opens);
@@ -119,7 +106,6 @@ require(['angular', 'moment'], function(angular, moment) {
         self.linkedCalendars = (self.options.linkedCalendars !== undefined) ? self.options.linkedCalendars : true;
         self.autoUpdateInput = (self.options.autoUpdateInput !== undefined) ? self.options.autoUpdateInput : true;
         self.alwaysShowCalendars = (self.options.alwaysShowCalendars !== undefined) ? self.options.alwaysShowCalendars : false;
-        self.ranges = (self.ranges !== undefined) ? self.ranges : {};
 
         self.locale = {
             direction: 'ltr',
@@ -314,8 +300,17 @@ require(['angular', 'moment'], function(angular, moment) {
                 }
             }
         }
-
+// We need to move this to the index.html demo page.  Moment needs to be included there, in addition to here.
+options.ranges={
+                      'Today': [moment(), moment()],
+                      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                      'This Month': [moment().startOf('month'), moment().endOf('month')],
+                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    };
         if (typeof options.ranges === 'object') {
+            self.ranges = {};
             for (range in options.ranges) {
 
                 if (typeof options.ranges[range][0] === 'string')
@@ -394,7 +389,7 @@ require(['angular', 'moment'], function(angular, moment) {
 
         //swap the position of the predefined ranges if opens right
         if (typeof options.ranges !== 'undefined' && self.opens == 'right') {
-            self.container.find('.ranges').prependTo( self.container.find('.calendar.left').parent() );
+            // self.container.find('.ranges').prependTo( self.container.find('.calendar.left').parent() );
         }
         $scope.$on('daterangepicker.change', self.formInputsChanged);
         //
@@ -603,8 +598,6 @@ require(['angular', 'moment'], function(angular, moment) {
           }
           self.activeRange = null;
 	        if (self.endDate == null) return;
-
-	        self.calculateChosenLabel();
 	      };
 
         self.getArrayWithNumberOfElements = function(x) {
@@ -963,7 +956,6 @@ require(['angular', 'moment'], function(angular, moment) {
               }
               self.setEndDate(date.clone());
               if (self.autoApply) {
-                self.calculateChosenLabel();
                 self.clickApply();
               }
             }
@@ -1101,34 +1093,21 @@ require(['angular', 'moment'], function(angular, moment) {
             }
         };
 
-        self.calculateChosenLabel = function () {
-          var customRange = true;
-          var i = 0;
-          for (var range in self.ranges) {
-            if (self.timePicker) {
-              if (self.startDate.isSame(self.ranges[range][0]) && self.endDate.isSame(self.ranges[range][1])) {
-                customRange = false;
-                self.chosenLabel = self.container.find('.ranges li:eq(' + i + ')').addClass('active').html();
-                break;
-              }
-            } else {
-              //ignore times when comparing dates if time picker is not enabled
-              if (self.startDate.format('YYYY-MM-DD') == self.ranges[range][0].format('YYYY-MM-DD') && self.endDate.format('YYYY-MM-DD') == self.ranges[range][1].format('YYYY-MM-DD')) {
-                customRange = false;
-                self.chosenLabel = self.container.find('.ranges li:eq(' + i + ')').addClass('active').html();
-                break;
-              }
-            }
-            i++;
-          }
-          if (customRange) {
-            if (self.showCustomRangeLabel) {
-              self.customRangeClass = 'active';
-              self.chosenLabel = "Custom Range";
-            } else {
-              self.chosenLabel = null;
-            }
+        self.clickRange = function(label, range) {
+          self.chosenLabel = label;
+          if (label === self.locale.customRangeLabel) {
             self.showCalendars();
+          } else {
+            self.startDate = range[0];
+            self.endDate = range[1];
+            if (!self.timePicker) {
+              self.startDate.startOf('day');
+              self.endDate.startOf('day');
+            }
+            if (!self.alwaysShowCalendars) {
+              self.showCalendars = false;
+            }
+            self.updateView();
           }
         };
 

@@ -124,7 +124,7 @@
   <div class="ranges">
       <div class="range_inputs">
           <ul>
-            <li ng-repeat="range in $ctrl.ranges" data-range-key="range">{{range}}</li>
+            <li ng-repeat="(label, range) in $ctrl.ranges" data-range-key="range" ng-click="$ctrl.clickRange(label, range)" ng-class="{active: label === $ctrl.chosenLabel}">{{label}}</li>
             <li data-range-key="{{$ctrl.ranges.length + 1}}">Custom Range</li>
           </ul>
       </div>

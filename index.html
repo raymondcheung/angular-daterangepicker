@@ -97,7 +97,19 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.ranges" id="ranges"> ranges (with example predefined ranges)
+                  <!-- Only the options.ranges value needs to be set in order for the calendar to function correctly, setting rangesEnabled is solely for the purpose of the input box for the demo; so rangesEnabled is not used anywhere in the DaterangePicker code -->
+                  <script src="./bower_components/moment/moment.js"></script>
+                  <input type="checkbox" ng-model="options.rangesEnabled" 
+                  ng-init="options.rangesEnabled=true;
+                    options.ranges={
+                      'Today': [moment(), moment()],
+                      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                      'This Month': [moment().startOf('month'), moment().endOf('month')],
+                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    };" 
+                  id="ranges"> ranges (with example predefined ranges)
                 </label>
               </div>
               <div class="checkbox">
