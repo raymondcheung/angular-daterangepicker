@@ -1010,7 +1010,7 @@ require(['angular', 'moment'], function(angular, moment) {
               self.left.calendar.month.month(month);
               var date = new Date(self.left.calendar.month),
                   m = moment(date);
-              self.right.calendar.month.set(m).add(1, 'month');
+              self.right.calendar.month.set(m.toObject()).add(1, 'month');
             } else {
               self.right.calendar.month.month(month);
               var date = new Date(self.right.calendar.month),
