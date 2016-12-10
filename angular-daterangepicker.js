@@ -871,11 +871,11 @@ require(['angular', 'moment'], function(angular, moment) {
         self.initFormInputs = function() {
         	self.daterangepickerStart = self.startDate ? self.startDate.format(self.locale.format) : null;
         	self.daterangepickerEnd = self.endDate ? self.endDate.format(self.locale.format) : null;
-          self.daterangeInputValue = self.daterangepickerStart + ' - ' + self.daterangepickerEnd;
+          self.daterangeInputValue = self.daterangepickerStart + ' - ' + (self.daterangepickerEnd !== null ? self.daterangepickerEnd : '');
         };
 
         self.updateInputValue = function() {
-          self.daterangeInputValue = self.daterangepickerStart + ' - ' + self.daterangepickerEnd;
+          self.daterangeInputValue = self.daterangepickerStart + ' - ' + (self.daterangepickerEnd !== null ? self.daterangepickerEnd : '');
         }
 
         self.showCalendars = function() {
