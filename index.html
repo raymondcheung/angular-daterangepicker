@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title>title</title>
-    <script data-main="angular-daterangepicker" src="require.js"></script>
+    <script src="./bower_components/moment/moment.js"></script>
+    <script src="./bower_components/angular/angular.js"></script>
+    <script src="./daterangepicker-demo.js"></script>
+    <script src="./angular-daterangepicker.js"></script>
     <meta charset="UTF-8" />
     <title>A date range picker for Bootstrap</title>
     <link href="./bootstrap.min.css" rel="stylesheet">
@@ -18,7 +21,7 @@
     </style>
   </head>
   <body ng-app="daterangepickerDemo" ng-init="options = {}">
-      <div class="container">
+      <div class="container" ng-controller="demoCtrl">
         <h1 style="margin: 0 0 20px 0">Configuration Builder</h1>
         <div class="well configurator">
           <form>
@@ -97,7 +100,10 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.ranges" id="ranges"> ranges (with example predefined ranges)
+                  <!-- Only the options.ranges value needs to be set in order for the calendar to function correctly, setting rangesEnabled is solely for the purpose of the input box for the demo; so rangesEnabled is not used anywhere in the DaterangePicker code -->
+                  <input type="checkbox" ng-model="options.rangesEnabled" 
+                  ng-init="options.rangesEnabled=true;" 
+                  id="ranges"> ranges (with example predefined ranges)
                 </label>
               </div>
               <div class="checkbox">
@@ -167,6 +173,5 @@
           </div>
         </div>
       </div>
-      <script type="text/javascript" src="require.js" data-main="main.js"></script>
   </body>
 </html>
