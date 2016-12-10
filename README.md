@@ -66,7 +66,6 @@ Coming soon!
 # Not yet fully implemented
 - opens
 - drops
-- showDropdowns
 - singleDatePicker
 - timePicker24Hour
 - timePickerIncrement (in minutes)
@@ -83,6 +82,7 @@ Coming soon!
 - endDate
 - minDate
 - maxDate
+- showDropdowns
 - showWeekNumbers
 - showISOWeekNumbers
 - timePicker
