@@ -73,7 +73,6 @@ Coming soon!
 - dateLimit (with example date range span)
 - locale (with example settings)
 - buttonClasses
-- ranges (with example predefined ranges)
 - alwaysShowCalendars
 - showCustomRangeLabel
 
@@ -87,6 +86,7 @@ Coming soon!
 - showISOWeekNumbers
 - timePicker
 - linkedCalendars
+- ranges (with example predefined ranges)
 - autoUpdateInput
 
 # Contributing
