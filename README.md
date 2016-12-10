@@ -10,6 +10,7 @@
 - [Licensing](#licensing)
 
 # Demo
+https://raymondcheung.github.io/angular-daterangepicker/
 
 # Installation
 Currently, this is in development.  So, the only way to install it is to either clone it from this repo, or download it as a zip and unpack it to your project.  Once it's in your project, and has been included(require.js, \<script>, etc.), then you can use by adding the tag do your views.
@@ -54,36 +55,39 @@ Coming soon!
 - isCustomDate: (function) A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.
 - autoUpdateInput: (boolean) Indicates whether the date range picker should automatically update the value of an <input> element it's attached to at initialization and when the selected dates change.
 
-## Unsupported(configurations from Bootstrap Daterange Picker that will not be ported)
-parentEl
-## Unsupported(no decision yet on whether it will be worked on)
-autoApply
-applyClass
-cancelClass
-## Not yet fully implemented
-opens
-drops
-showDropdowns
-singleDatePicker
-timePicker24Hour
-timePickerIncrement (in minutes)
-timePickerSeconds
-dateLimit (with example date range span)
-locale (with example settings)
-buttonClasses
-ranges (with example predefined ranges)
-alwaysShowCalendars
-showCustomRangeLabel
-## Currently functional
-startDate
-endDate
-minDate
-maxDate
-showWeekNumbers
-showISOWeekNumbers
-timePicker
-linkedCalendars
-autoUpdateInput
+# Unsupported(configurations from Bootstrap Daterange Picker that will not be ported)
+- parentEl
+
+# Unsupported(no decision yet on whether it will be worked on)
+- autoApply
+- applyClass
+- cancelClass
+
+# Not yet fully implemented
+- opens
+- drops
+- showDropdowns
+- singleDatePicker
+- timePicker24Hour
+- timePickerIncrement (in minutes)
+- timePickerSeconds
+- dateLimit (with example date range span)
+- locale (with example settings)
+- buttonClasses
+- ranges (with example predefined ranges)
+- alwaysShowCalendars
+- showCustomRangeLabel
+
+# Currently functional
+- startDate
+- endDate
+- minDate
+- maxDate
+- showWeekNumbers
+- showISOWeekNumbers
+- timePicker
+- linkedCalendars
+- autoUpdateInput
 
 # Contributing
 I'm always looking for extra help, but currently I am only able to work on this a few hours a week.  Also, there are no unit tests to gaurantee against unintended breakage.  So, pull requests will be very carefully and slowly reviewed.  Once I have unit tests up, and can run them to verify nothing breaks upon merging, approvals will come faster.
