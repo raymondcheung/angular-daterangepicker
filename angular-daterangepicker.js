@@ -1,5 +1,8 @@
   angular
     .module('ngDaterangePicker', [])
+    .factory('moment', function($window) {
+      return $window.moment;
+    })
     .component('daterangePicker', {
       bindings: {
         inputValue: '<',
@@ -23,9 +26,9 @@
         alwaysShowCalendars: '<',
         options: '<'
       },
-    	templateUrl: "daterangepicker.html",
-    	controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
-	    	var self = this;
+    templateUrl: "daterangepicker.html",
+    controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
+    	var self = this;
         self.left = {};
         self.right = {};
         self.hourLeftValue=12;

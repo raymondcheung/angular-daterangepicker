@@ -1,13 +1,14 @@
 'use strict';
 
-describe('daterangePicker', function() {
-  var $componentController,
-      scope;
+describe('daterangePickerComponent: ', function() {
+  var $componentController;
+
+  var mockMoment = {
+    
+  };
 
   beforeEach(module('ngDaterangePicker'));
-
-  beforeEach(inject(function($rootScope, _$componentController_) {
-    scope = $rootScope.$new();
+  beforeEach(inject(function($injector, _$componentController_) {
     $componentController = _$componentController_;
   }));
 
