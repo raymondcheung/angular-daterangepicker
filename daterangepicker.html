@@ -14,20 +14,20 @@
         <i ng-click="$ctrl.renderCalendar()" class="fa fa-calendar glyphicon glyphicon-calendar"></i>
         <div class="calendar-time" ng-show="$ctrl.timePicker">
           <div ng-if="$ctrl.timePicker">
-            <select ng-model="$ctrl.hourLeftValue" class="hourselect" ng-init="$ctrl.hourLeftValue='12'">
-              <option ng-repeat="h in $ctrl.hourRange(start, end)" ng-disabled="$ctrl.outputHourDisabled(h)">{{h}}</option>
+            <select ng-model="$ctrl.hourLeftValue" ng-change="$ctrl.updateDateWithTimepicker('left')" class="hourselect" ng-init="$ctrl.hourLeftValue='12'">
+              <option ng-repeat="h in $ctrl.hourRange(start, end)">{{h}}</option>
             </select>
             :
-            <select ng-model="$ctrl.minuteLeftValue" class="minuteselect" ng-init="$ctrl.minuteLeftValue='00'">
-              <option ng-repeat="m in $ctrl.minuteRange(start, end)" ng-disabled="$ctrl.outputMinuteDisabled(m)">{{m}}</option>
+            <select ng-model="$ctrl.minuteLeftValue" ng-change="$ctrl.updateDateWithTimepicker('left')" class="minuteselect" ng-init="$ctrl.minuteLeftValue='00'">
+              <option ng-repeat="m in $ctrl.minuteRange(start, end)">{{m}}</option>
             </select>
             :
-            <select ng-model="$ctrl.secondLeftValue" class="secondselect" ng-init="$ctrl.secondLeftValue='00'">
-              <option ng-repeat="s in $ctrl.secondRange(start, end)" ng-disabled="$ctrl.outputSecondDisabled(s)">{{s}}</option>
+            <select ng-model="$ctrl.secondLeftValue" ng-change="$ctrl.updateDateWithTimepicker('left')" class="secondselect" ng-init="$ctrl.secondLeftValue='00'">
+              <option ng-repeat="s in $ctrl.secondRange(start, end)">{{s}}</option>
             </select>
-            <select ng-if="!$ctrl.timePicker24Hour" class="ampmselect" ng-model="$ctrl.ampmLeftValue" ng-init="$ctrl.ampmLeftValue='am'">
-              <option ng-disabled="$ctrl.outputAMPMDisabled('am')" class="{{$ctrl.left.AMDisabledClass}}" value="am">AM</option>
-              <option ng-disabled="$ctrl.outputAMPMDisabled('pm')" class="{{$ctrl.left.PMDisabledClass}}" value="pm">PM</option>
+            <select ng-if="!$ctrl.timePicker24Hour" ng-change="$ctrl.updateDateWithTimepicker('left')" class="ampmselect" ng-model="$ctrl.ampmLeftValue" ng-init="$ctrl.ampmLeftValue='AM'">
+              <option class="{{$ctrl.left.AMDisabledClass}}" value="AM">AM</option>
+              <option class="{{$ctrl.left.PMDisabledClass}}" value="PM">PM</option>
             </select>
           </div>
           <i class="fa fa-clock-o glyphicon glyphicon-time"></i>
@@ -75,20 +75,20 @@
         <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
         <div class="calendar-time" ng-show="$ctrl.timePicker">
           <div ng-if="$ctrl.timePicker">
-            <select ng-disabled="$ctrl.right.calendar.disabled" ng-model="$ctrl.hourRightValue" class="hourselect" ng-init="$ctrl.hourRightValue='12'">
-              <option ng-repeat="h in $ctrl.hourRange(start, end)" ng-disabled="$ctrl.outputHourDisabled(h)">{{h}}</option>
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-change="$ctrl.updateDateWithTimepicker('right')" ng-model="$ctrl.hourRightValue" class="hourselect" ng-init="$ctrl.hourRightValue='12'">
+              <option ng-repeat="h in $ctrl.hourRange(start, end)">{{h}}</option>
             </select>
             :
-            <select ng-disabled="$ctrl.right.calendar.disabled" ng-model="$ctrl.minuteRightValue" class="minuteselect" ng-init="$ctrl.minuteRightValue='00'">
-              <option ng-repeat="m in $ctrl.minuteRange(start, end)" ng-disabled="$ctrl.outputMinuteDisabled(m)">{{m}}</option>
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-change="$ctrl.updateDateWithTimepicker('right')" ng-model="$ctrl.minuteRightValue" class="minuteselect" ng-init="$ctrl.minuteRightValue='00'">
+              <option ng-repeat="m in $ctrl.minuteRange(start, end)">{{m}}</option>
             </select>
             :
-            <select ng-disabled="$ctrl.right.calendar.disabled" ng-model="$ctrl.secondRightValue" class="secondselect" ng-init="$ctrl.secondRightValue='00'">
-              <option ng-repeat="s in $ctrl.secondRange(start, end)" ng-disabled="$ctrl.outputSecondDisabled(s)">{{s}}</option>
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-change="$ctrl.updateDateWithTimepicker('right')" ng-model="$ctrl.secondRightValue" class="secondselect" ng-init="$ctrl.secondRightValue='00'">
+              <option ng-repeat="s in $ctrl.secondRange(start, end)">{{s}}</option>
             </select>
-            <select ng-disabled="$ctrl.right.calendar.disabled" ng-if="!$ctrl.timePicker24Hour" class="ampmselect" ng-model="$ctrl.ampmRightValue" ng-init="$ctrl.ampmRightValue='am'">
-              <option ng-disabled="$ctrl.outputAMPMDisabled('am')" class="{{$ctrl.right.AMDisabledClass}}" value="am">AM</option>
-              <option ng-disabled="$ctrl.outputAMPMDisabled('pm')" class="{{$ctrl.right.PMDisabledClass}}" value="pm">PM</option>
+            <select ng-disabled="$ctrl.right.calendar.disabled" ng-change="$ctrl.updateDateWithTimepicker('right')" ng-if="!$ctrl.timePicker24Hour" class="ampmselect" ng-model="$ctrl.ampmRightValue" ng-init="$ctrl.ampmRightValue='AM'">
+              <option class="{{$ctrl.right.AMDisabledClass}}" value="AM">AM</option>
+              <option class="{{$ctrl.right.PMDisabledClass}}" value="PM">PM</option>
             </select>
           </div>
           <i class="fa fa-clock-o glyphicon glyphicon-time"></i>
