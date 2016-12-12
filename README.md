@@ -67,9 +67,6 @@ Coming soon!
 - opens
 - drops
 - singleDatePicker
-- timePicker24Hour
-- timePickerIncrement (in minutes)
-- timePickerSeconds
 - dateLimit (with example date range span)
 - locale (with example settings)
 - buttonClasses
@@ -88,6 +85,9 @@ Coming soon!
 - linkedCalendars
 - ranges (with example predefined ranges)
 - autoUpdateInput
+- timePicker24Hour
+- timePickerIncrement (in minutes)
+- timePickerSeconds
 
 # Contributing
 I'm always looking for extra help, but currently I am only able to work on this a few hours a week.  Also, there are no unit tests to gaurantee against unintended breakage.  So, pull requests will be very carefully and slowly reviewed.  Once I have unit tests up, and can run them to verify nothing breaks upon merging, approvals will come faster.
