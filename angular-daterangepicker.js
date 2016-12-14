@@ -5,6 +5,11 @@
     })
     .component('daterangePicker', {
       bindings: {
+<<<<<<< HEAD
+=======
+        inputValue: '<',
+        inputId: '<',
+>>>>>>> 2b754b8b61592578954684e55851827075377f62
         options: '<'
       },
       templateUrl: "/daterangepicker.html",
@@ -233,30 +238,6 @@
             }
         }
 
-        var start, end, range;
-
-        //if no start/end dates set, check if an input element contains initial values
-        if (typeof options.startDate === 'undefined' && typeof options.endDate === 'undefined') {
-            if ($(self.element).is('input[type=text]')) {
-                var val = $(self.element).val(),
-                    split = val.split(self.locale.separator);
-
-                start = end = null;
-
-                if (split.length == 2) {
-                    start = moment(split[0], self.locale.format);
-                    end = moment(split[1], self.locale.format);
-                } else if (self.singleDatePicker && val !== "") {
-                    start = moment(val, self.locale.format);
-                    end = moment(val, self.locale.format);
-                }
-                if (start !== null && end !== null) {
-                    self.setStartDate(start);
-                    self.setEndDate(end);
-                }
-            }
-        }
-
         if (typeof options.ranges === 'object') {
             self.ranges = {};
             for (range in options.ranges) {
@@ -330,213 +311,163 @@
             // self.container.find('.ranges').prependTo( self.container.find('.calendar.left').parent() );
         }
         $scope.$on('daterangepicker.change', self.formInputsChanged);
-        //
-        // event listeners
-        //
-        // this.container.find('.calendar')
-        //     .on('change.daterangepicker', 'select.yearselect', $.proxy(this.monthOrYearChanged, this))
-        //     .on('change.daterangepicker', 'select.monthselect', $.proxy(this.monthOrYearChanged, this))
-        //     .on('change.daterangepicker', 'select.hourselect,select.minuteselect,select.secondselect,select.ampmselect', $.proxy(this.timeChanged, this))
-        //     .on('click.daterangepicker', '.daterangepicker_input input', $.proxy(this.showCalendars, this))
-        //     .on('focus.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsFocused, this))
-        //     .on('blur.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsBlurred, this))
-        //     .on('change.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsChanged, this));
+        self.setStartDate = function(startDate) {
+            if (typeof startDate === 'string')
+              self.startDate = moment(startDate, self.locale.format);
 
-        // this.container.find('.ranges')
-        //     .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
-        //     .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this))
-        //     .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
-        //     .on('mouseenter.daterangepicker', 'li', $.proxy(this.hoverRange, this))
-        //     .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
+            if (typeof startDate === 'object')
+              self.startDate = moment(startDate);
 
-        // if (this.element.is('input') || this.element.is('button')) {
-        //     this.element.on({
-        //         'click.daterangepicker': $.proxy(this.show, this),
-        //         'focus.daterangepicker': $.proxy(this.show, this),
-        //         'keyup.daterangepicker': $.proxy(this.elementChanged, this),
-        //         'keydown.daterangepicker': $.proxy(this.keydown, this)
-        //     });
-        // } else {
-        //     this.element.on('click.daterangepicker', $.proxy(this.toggle, this));
-        // }
+            if (!self.timePicker)
+              self.startDate = self.startDate.startOf('day');
 
-        // //
-        // // if attached to a text input, set the initial value
-        // //
+            if (self.timePicker && self.timePickerIncrement)
+              self.startDate.minute(Math.round(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
 
-        // if (this.element.is('input') && !this.singleDatePicker && this.autoUpdateInput) {
-        //     this.element.val(this.startDate.format(this.locale.format) + this.locale.separator + this.endDate.format(this.locale.format));
-        //     this.element.trigger('change');
-        // } else if (this.element.is('input') && this.autoUpdateInput) {
-        //     this.element.val(this.startDate.format(this.locale.format));
-        //     this.element.trigger('change');
-        // }
+            if (self.minDate && self.startDate.isBefore(self.minDate)) {
+              self.startDate = self.minDate.clone();
+        	    if (self.timePicker && self.timePickerIncrement)
+              self.startDate.minute(Math.round(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+        }
 
+        if (self.maxDate && self.startDate.isAfter(self.maxDate)) {
+          self.startDate = self.maxDate.clone();
+          if (self.timePicker && self.timePickerIncrement)
+            self.startDate.minute(Math.floor(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+        }
 
+        if (!self.isShowing)
+          self.updateElement();
 
+        self.updateMonthsInView();
+        };
 
+        self.setEndDate = function(endDate) {
+        if (typeof endDate === 'string')
+            self.endDate = moment(endDate, self.locale.format);
 
+        if (typeof endDate === 'object')
+            self.endDate = moment(endDate);
 
+        if (!self.timePicker)
+            self.endDate = self.endDate.endOf('day');
 
+        if (self.timePicker && self.timePickerIncrement)
+            self.endDate.minute(Math.round(self.endDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
 
+        if (self.endDate.isBefore(self.startDate))
+            self.endDate = self.startDate.clone();
 
-	      self.setStartDate = function(startDate) {
-	        if (typeof startDate === 'string')
-	          self.startDate = moment(startDate, self.locale.format);
+        if (self.maxDate && self.endDate.isAfter(self.maxDate))
+            self.endDate = self.maxDate.clone();
 
-	        if (typeof startDate === 'object')
-	          self.startDate = moment(startDate);
+        if (self.dateLimit && self.startDate.clone().add(self.dateLimit).isBefore(self.endDate))
+            self.endDate = self.startDate.clone().add(self.dateLimit);
 
-	        if (!self.timePicker)
-	          self.startDate = self.startDate.startOf('day');
+        self.previousRightTime = self.endDate.clone();
 
-	        if (self.timePicker && self.timePickerIncrement)
-	          self.startDate.minute(Math.round(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+        if (!self.isShowing)
+            self.updateElement();
 
-	        if (self.minDate && self.startDate.isBefore(self.minDate)) {
-	          self.startDate = self.minDate.clone();
-	     	    if (self.timePicker && self.timePickerIncrement)
-	              self.startDate.minute(Math.round(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
-	        }
+            self.updateMonthsInView();
+        };
 
-	        if (self.maxDate && self.startDate.isAfter(self.maxDate)) {
-	          self.startDate = self.maxDate.clone();
-	          if (self.timePicker && self.timePickerIncrement)
-	            self.startDate.minute(Math.floor(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
-	        }
+        self.isInvalidDate = function() {
+            return false;
+        };
 
-	        if (!self.isShowing)
-	          self.updateElement();
+        self.isCustomDate = function() {
+            return false;
+        };
 
-	        self.updateMonthsInView();
-	      };
+        self.updateView = function() {
+            if (self.timePicker) {
+              self.renderTimePicker('left');
+              self.renderTimePicker('right');
+              if (!self.endDate) {
+              	self.right.calendar.disabled = true;
+              } else {
+              	self.right.calendar.disabled = false;
+              }
+            }
+            self.updateMonthsInView();
+            self.updateCalendars();
+            self.initFormInputs();
+        };
 
-	      self.setEndDate = function(endDate) {
-	        if (typeof endDate === 'string')
-	          self.endDate = moment(endDate, self.locale.format);
+        self.updateMonthsInView = function() {
+            if (self.endDate) {
+              //if both dates are visible already, do nothing
+              if (!self.singleDatePicker && self.left.calendar.month && self.right.calendar.month &&
+                (self.startDate.format('YYYY-MM') == self.left.calendar.month.format('YYYY-MM') || self.startDate.format('YYYY-MM') == self.right.calendar.month.format('YYYY-MM'))
+                &&
+                (self.endDate.format('YYYY-MM') == self.left.calendar.month.format('YYYY-MM') || self.endDate.format('YYYY-MM') == self.right.calendar.month.format('YYYY-MM'))
+                ) {
+                return;
+              }
 
-	        if (typeof endDate === 'object')
-	          self.endDate = moment(endDate);
+              self.left.calendar.month = self.startDate.clone().date(2);
+              if (!self.linkedCalendars && (self.endDate.month() != self.startDate.month() || self.endDate.year() != self.startDate.year())) {
+                self.right.calendar.month = self.endDate.clone().date(2);
+              } else {
+                self.right.calendar.month = self.startDate.clone().date(2).add(1, 'month');
+              }
 
-	        if (!self.timePicker)
-	          self.endDate = self.endDate.endOf('day');
+            } else {
+              if (self.left.calendar.month.format('YYYY-MM') != self.startDate.format('YYYY-MM') && self.right.calendar.month.format('YYYY-MM') != self.startDate.format('YYYY-MM')) {
+                self.left.calendar.month = self.startDate.clone().date(2);
+                self.right.calendar.month = self.startDate.clone().date(2).add(1, 'month');
+              }
+            }
+            if (self.maxDate && self.linkedCalendars && !self.singleDatePicker && self.right.calendar.month > self.maxDate) {
+              self.right.calendar.month = self.maxDate.clone().date(2);
+              self.left.calendar.month = self.maxDate.clone().date(2).subtract(1, 'month');
+            }
+        };
 
-	        if (self.timePicker && self.timePickerIncrement)
-	          self.endDate.minute(Math.round(self.endDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+        self.updateCalendars = function() {
+            if (self.timePicker) {
+              var hour, minute, second;
+              var start = self.timePicker24Hour ? 0 : 1;
+              var end = self.timePicker24Hour ? 23 : 12;
 
-	        if (self.endDate.isBefore(self.startDate))
-	          self.endDate = self.startDate.clone();
-
-	        if (self.maxDate && self.endDate.isAfter(self.maxDate))
-	          self.endDate = self.maxDate.clone();
-
-	        if (self.dateLimit && self.startDate.clone().add(self.dateLimit).isBefore(self.endDate))
-	          self.endDate = self.startDate.clone().add(self.dateLimit);
-
-	        self.previousRightTime = self.endDate.clone();
-
-	        if (!self.isShowing)
-	          self.updateElement();
-
-	        self.updateMonthsInView();
-	      };
-
-	      self.isInvalidDate = function() {
-	        return false;
-	      };
-
-	      self.isCustomDate = function() {
-	        return false;
-	      };
-
-	      self.updateView = function() {
-	        if (self.timePicker) {
-	          self.renderTimePicker('left');
-	          self.renderTimePicker('right');
-	          if (!self.endDate) {
-	          	self.right.calendar.disabled = true;
-	          } else {
-	          	self.right.calendar.disabled = false;
-	          }
-	        }
-	        self.updateMonthsInView();
-	        self.updateCalendars();
-	        self.initFormInputs();
-	      };
-
-	      self.updateMonthsInView = function() {
-	        if (self.endDate) {
-	          //if both dates are visible already, do nothing
-	          if (!self.singleDatePicker && self.left.calendar.month && self.right.calendar.month &&
-	            (self.startDate.format('YYYY-MM') == self.left.calendar.month.format('YYYY-MM') || self.startDate.format('YYYY-MM') == self.right.calendar.month.format('YYYY-MM'))
-	            &&
-	            (self.endDate.format('YYYY-MM') == self.left.calendar.month.format('YYYY-MM') || self.endDate.format('YYYY-MM') == self.right.calendar.month.format('YYYY-MM'))
-	            ) {
-	            return;
-	          }
-
-	          self.left.calendar.month = self.startDate.clone().date(2);
-	          if (!self.linkedCalendars && (self.endDate.month() != self.startDate.month() || self.endDate.year() != self.startDate.year())) {
-	            self.right.calendar.month = self.endDate.clone().date(2);
-	          } else {
-	            self.right.calendar.month = self.startDate.clone().date(2).add(1, 'month');
-	          }
-
-	        } else {
-	          if (self.left.calendar.month.format('YYYY-MM') != self.startDate.format('YYYY-MM') && self.right.calendar.month.format('YYYY-MM') != self.startDate.format('YYYY-MM')) {
-	            self.left.calendar.month = self.startDate.clone().date(2);
-	            self.right.calendar.month = self.startDate.clone().date(2).add(1, 'month');
-	          }
-	        }
-	        if (self.maxDate && self.linkedCalendars && !self.singleDatePicker && self.right.calendar.month > self.maxDate) {
-	          self.right.calendar.month = self.maxDate.clone().date(2);
-	          self.left.calendar.month = self.maxDate.clone().date(2).subtract(1, 'month');
-	        }
-	      };
-
-	      self.updateCalendars = function() {
-	        if (self.timePicker) {
-	          var hour, minute, second;
-	          var start = self.timePicker24Hour ? 0 : 1;
-	          var end = self.timePicker24Hour ? 23 : 12;
-
-	          if (self.endDate) {
+              if (self.endDate) {
               hour = parseInt(self.hourLeftValue, 10);
               minute = parseInt(self.minuteLeftValue, 10);
               second = self.timePickerSeconds ? parseInt(self.secondLeftValue, 10) : 0;
-	            if (!self.timePicker24Hour) {
-	            	var ampm = self.ampmLeftValue;
-	              // var ampm = self.container.find('.left .ampmselect').val();
-	              if (ampm === 'PM' && hour < 12)
-	                hour += 12;
-	              if (ampm === 'AM' && hour === 12)
-	                hour = 0;
-	            }
-	          } else {
+                if (!self.timePicker24Hour) {
+                	var ampm = self.ampmLeftValue;
+                  // var ampm = self.container.find('.left .ampmselect').val();
+                  if (ampm === 'PM' && hour < 12)
+                    hour += 12;
+                  if (ampm === 'AM' && hour === 12)
+                    hour = 0;
+                }
+              } else {
               hour = parseInt(self.hourRightValue, 10);
               minute = parseInt(self.minuteRightValue, 10);
               second = self.timePickerSeconds ? parseInt(self.secondRightValue, 10) : 0;
-	            if (!self.timePicker24Hour) {
-	            	var ampm = self.ampmRightValue;
-	              if (ampm === 'PM' && hour < 12)
-	                hour += 12;
-	              if (ampm === 'AM' && hour === 12)
-	                hour = 0;
-	            }
-	          }
-	          self.left.calendar.month.hour(hour).minute(minute).second(second);
-	          self.right.calendar.month.hour(hour).minute(minute).second(second);
-	        }
+                if (!self.timePicker24Hour) {
+                	var ampm = self.ampmRightValue;
+                  if (ampm === 'PM' && hour < 12)
+                    hour += 12;
+                  if (ampm === 'AM' && hour === 12)
+                    hour = 0;
+                }
+              }
+              self.left.calendar.month.hour(hour).minute(minute).second(second);
+              self.right.calendar.month.hour(hour).minute(minute).second(second);
+            }
 
-	        self.renderCalendar();
+            self.renderCalendar();
 
-	        //highlight any predefined range matching the current start and end dates
-          for(var x in self.ranges) {
-            self.ranges[x].active = false;
-          }
-          self.activeRange = null;
-	        if (self.endDate == null) return;
-	      };
+            //highlight any predefined range matching the current start and end dates
+            for(var x in self.ranges) {
+                self.ranges[x].active = false;
+            }
+            self.activeRange = null;
+                if (self.endDate == null) return;
+        };
 
         self.getArrayWithNumberOfElements = function(x) {
           return Array(x);
@@ -685,7 +616,7 @@
             }
         };
 
-				self.renderTimePicker = function(side) {
+		self.renderTimePicker = function(side) {
 
 	        // Don't bother updating the time picker if it's currently disabled
 	        // because an end date hasn't been clicked yet
@@ -741,7 +672,7 @@
 			    };
 
 
-			    self.outputHourDisabled = function(i) {
+			    self.outputHourDisabled = function(i, side) {
 			      var i_in_24 = i;
 			      if (!self.timePicker24Hour)
 			        i_in_24 = self[side].timeSelected.hour() >= 12 ? (i == 12 ? 12 : i + 12) : (i == 12 ? 0 : i);
@@ -761,7 +692,7 @@
 	        	}
 	        	return range;
 	        };
-	        self.outputMinuteDisabled = function(m) {
+	        self.outputMinuteDisabled = function(m, side) {
 	          var time = self[side].timeSelected.clone().minute(m);
 	          if (minDate && time.second(59).isBefore(minDate))
 	            return true;
@@ -772,7 +703,7 @@
 
 	        self.secondRange = self.minuteRange;
 
-	        self.outputSecondDisabled = function(s) {
+	        self.outputSecondDisabled = function(s, side) {
 	          var time = self[side].timeSelected.clone().second(s);
 	          if (minDate && time.isBefore(minDate))
 	            return true;
@@ -781,33 +712,29 @@
 	          return false;
 	        };
 
-          self.outputAMPMDisabled = function(i) {
-            if (i === 'am' && minDate && self[side].timeSelected.clone().hour(12).minute(0).second(0).isBefore(minDate)) {
-              return true;
-            } else if (i === 'pm' && maxDate && self[side].timeSelected.clone().hour(0).minute(0).second(0).isAfter(maxDate)) {
-              return true;
-            }
-            return false;
-          };
+            self.outputAMPMDisabled = function(i, side) {
+                if (i === 'am' && minDate && self[side].timeSelected.clone().hour(12).minute(0).second(0).isBefore(minDate)) {
+                  return true;
+                } else if (i === 'pm' && maxDate && self[side].timeSelected.clone().hour(0).minute(0).second(0).isAfter(maxDate)) {
+                  return true;
+                }
+                return false;
+            };
 
 
-          if (minDate && self[side].timeSelected.clone().hour(12).minute(0).second(0).isBefore(minDate)) {
+        if (minDate && self[side].timeSelected.clone().hour(12).minute(0).second(0).isBefore(minDate)) {
             self[side].AMDisabledClass = 'disabled';
-          } 
-          if (maxDate && self[side].timeSelected.clone().hour(0).minute(0).second(0).isAfter(maxDate)) {
+        } 
+        if (maxDate && self[side].timeSelected.clone().hour(0).minute(0).second(0).isAfter(maxDate)) {
             self[side].PMDisabledClass = 'disabled';
-          }
-	      };
+        }
+        };
 
         self.initFormInputs = function() {
         	self.daterangepickerStart = self.startDate ? self.startDate.format(self.locale.format) : null;
         	self.daterangepickerEnd = self.endDate ? self.endDate.format(self.locale.format) : null;
-          self.daterangeInputValue = self.daterangepickerStart + ' - ' + (self.daterangepickerEnd !== null ? self.daterangepickerEnd : '');
+            self.daterangeInputValue = self.daterangepickerStart + ' - ' + (self.daterangepickerEnd !== null ? self.daterangepickerEnd : '');
         };
-
-        self.updateInputValue = function() {
-          self.daterangeInputValue = self.daterangepickerStart + ' - ' + (self.daterangepickerEnd !== null ? self.daterangepickerEnd : '');
-        }
 
         self.showCalendars = function() {
           self.showCalendarsClass = 'show-calendar';
@@ -844,10 +771,51 @@
           }
         };
 
-        self.clickDate = function(row, col, side) {
-          if (!self[side].calendar[row][col].available) return;
+        self.updateDateWithTimepicker = function(side) {
+            // Update the start and end date values to whatever time is shown
+            // in the time picker
+            var date;
+            if (side === 'left') {
+                date = self.startDate;
+                hour = parseInt(self.hourLeftValue);
+                minute = parseInt(self.minuteLeftValue);
+                second = parseInt(self.secondLeftValue);
+                ampm = self.ampmLeftValue;
+            } else if (side === 'right') {
+                date = self.endDate;
+                hour = parseInt(self.hourRightValue);
+                minute = parseInt(self.minuteRightValue);
+                second = parseInt(self.secondRightValue);
+                ampm = self.ampmRightValue;
+            }
+            if (!self.timePicker24Hour) {
+                var ampm;
+                if (side === 'left') {
+                    ampm = self.ampmLeftValue;
+                } else {
+                    ampm = self.ampmRightValue;
+                }
+                if (ampm === 'PM' && hour < 12)
+                    hour += 12;
+                if (ampm === 'AM' && hour === 12)
+                    hour = 0;
+            }
+            date = date.clone().hour(hour).minute(minute);
+            if (timePickerSeconds) {
+                date.second(second);
+            }
+            if (side === 'left') {
+                self.setStartDate(date.clone());
+            } else if (side === 'right') {
+                self.setEndDate(date.clone());
+            }
+            self.updateView();
+        };
 
-          var date = self[side].calendar[row][col].date;
+        self.clickDate = function(row, col, side) {
+            if (!self[side].calendar[row][col].available) return;
+
+            var date = self[side].calendar[row][col].date;
 
             //
             // this function needs to do a few things:
@@ -859,19 +827,6 @@
             //
 
             if (self.endDate || date.isBefore(self.startDate, 'day')) { //picking start
-              if (self.timePicker) {
-                var hour = parseInt(self.hourLeftValue, 10);
-                if (!self.timePicker24Hour) {
-                  var ampm = self.ampmLeftValue;
-                  if (ampm === 'PM' && hour < 12)
-                    hour += 12;
-                  if (ampm === 'AM' && hour === 12)
-                    hour = 0;
-                }
-                var minute = parseInt(self.minuteLeftValue, 10);
-                var second = self.timePickerSeconds ? parseInt(self.secondLeftValue, 10) : 0;
-                date = date.clone().hour(hour).minute(minute).second(second);
-              }
               self.endDate = null;
               self.setStartDate(date.clone());
             } else if (!self.endDate && date.isBefore(self.startDate)) {
@@ -879,26 +834,10 @@
               //but the time of the end date is before the start date
               self.setEndDate(self.startDate.clone());
             } else {
-              if (self.timePicker) {
-                var hour = parseInt(self.hourRightValue, 10);
-                if (!self.timePicker24Hour) {
-                    var ampm = self.ampmRightValue;
-                    if (ampm === 'PM' && hour < 12)
-                        hour += 12;
-                    if (ampm === 'AM' && hour === 12)
-                        hour = 0;
-                }
-                var minute = parseInt(self.minuteRightValue, 10);
-                var second = self.timePickerSeconds ? parseInt(self.secondRightValue, 10) : 0;
-                date = date.clone().hour(hour).minute(minute).second(second);
-              }
               self.setEndDate(date.clone());
-              self.clickApply();
             }
             if (self.singleDatePicker) {
                 self.setEndDate(self.startDate);
-                if (!self.timePicker)
-                    self.clickApply();
             }
 
             self.updateView();
