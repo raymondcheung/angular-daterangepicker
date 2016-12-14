@@ -5,29 +5,10 @@
     })
     .component('daterangePicker', {
       bindings: {
-        inputValue: '<',
-        inputId: '<',
-        startDate: '<',
-        endDate: '<',
-        minDate: '<',
-        maxDate: '<',
-        dateLimit: '<',
-        autoApply: '<',
-        singleDatePicker: '<',
-        showDropdowns: '<',
-        showWeekNumbers: '<',
-        showISOWeekNumbers: '<',
-        showCustomRangeLabel: '<',
-        timePicker: '<',
-        timePicker24Hour: '<',
-        timePickerIncrement: '<',
-        linkedCalendars: '<',
-        autoUpdateInput: '<',
-        alwaysShowCalendars: '<',
         options: '<'
       },
-    templateUrl: "daterangepicker.html",
-    controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
+      templateUrl: "/daterangepicker.html",
+      controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
     	var self = this;
         self.left = {};
         self.right = {};
@@ -76,7 +57,6 @@
         self.minDate = (self.options.minDate !== undefined) ? self.options.minDate : false;
         self.maxDate = (self.options.maxDate !== undefined) ? self.options.maxDate : false;
         self.dateLimit = (self.options.dateLimit !== undefined) ? self.options.dateLimit : false;
-        self.autoApply = (self.options.autoApply !== undefined) ? self.options.autoApply : false;
         self.singleDatePicker = (self.options.singleDatePicker !== undefined) ? self.options.singleDatePicker : false;
         self.showDropdowns = (self.options.showDropdowns !== undefined) ? self.options.showDropdowns : false;
         self.showWeekNumbers = (self.options.showWeekNumbers !== undefined) ? self.options.showWeekNumbers : false;
@@ -87,7 +67,6 @@
         self.timePickerIncrement = (self.options.timePickerIncrement !== undefined) ? self.options.timePickerIncrement : 1;
         self.timePickerSeconds = (self.options.timePickerSeconds !== undefined) ? self.options.timePickerSeconds : false;
         self.linkedCalendars = (self.options.linkedCalendars !== undefined) ? self.options.linkedCalendars : true;
-        self.autoUpdateInput = (self.options.autoUpdateInput !== undefined) ? self.options.autoUpdateInput : true;
         self.alwaysShowCalendars = (self.options.alwaysShowCalendars !== undefined) ? self.options.alwaysShowCalendars : false;
 
         self.locale = {
@@ -233,12 +212,6 @@
         if (typeof options.timePicker24Hour === 'boolean')
             self.timePicker24Hour = options.timePicker24Hour;
 
-        if (typeof options.autoApply === 'boolean')
-            self.autoApply = options.autoApply;
-
-        if (typeof options.autoUpdateInput === 'boolean')
-            self.autoUpdateInput = options.autoUpdateInput;
-
         if (typeof options.linkedCalendars === 'boolean')
             self.linkedCalendars = options.linkedCalendars;
 
@@ -331,16 +304,6 @@
         if (!self.timePicker) {
             self.startDate = self.startDate.startOf('day');
             self.endDate = self.endDate.endOf('day');
-        }
-
-        //can't be used together for now
-        if (self.timePicker && self.autoApply)
-            self.autoApply = false;
-
-        if (self.autoApply && typeof options.ranges !== 'object') {
-            self.container.find('.ranges').hide();
-        } else if (self.autoApply) {
-            self.container.find('.applyBtn, .cancelBtn').addClass('hide');
         }
 
         if (self.singleDatePicker) {
@@ -930,9 +893,7 @@
                 date = date.clone().hour(hour).minute(minute).second(second);
               }
               self.setEndDate(date.clone());
-              if (self.autoApply) {
-                self.clickApply();
-              }
+              self.clickApply();
             }
             if (self.singleDatePicker) {
                 self.setEndDate(self.startDate);
@@ -1087,12 +1048,11 @@
         };
 
         self.updateElement = function() {
-          if (!self.singleDatePicker && self.autoUpdateInput) {
+          if (!self.singleDatePicker) {
             self.daterangeInputValue = self.startDate.format(self.locale.format) + self.locale.separator + self.endDate.format(self.locale.format);
             $scope.$broadcast('daterangepicker.change');
-          } else if (self.autoUpdateInput) {
-            self.daterangeInputValue = self.startDate.format(self.locale.format);
           }
+          self.daterangeInputValue = self.startDate.format(self.locale.format);
         };
 
         self.formInputsChanged = function(event, args) {

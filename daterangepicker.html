@@ -1,4 +1,5 @@
-<input type="text" id="{{$ctrl.inputId}}" class="form-control" ng-model="$ctrl.daterangeInputValue" ng-focus="$ctrl.isShowing=true">
+<span class="bloo">blblb</span>
+<input type="text" id="{{$ctrl.inputId}}" class="form-control" ng-model="$ctrl.daterangeInputValue" ng-focus="$ctrl.isShowing=true" />
 <div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}}" ng-class="$ctrl.getDaterangepickerClasses()">
   <div class="calendar left">
       <div class="daterangepicker_input">
@@ -125,7 +126,7 @@
       <div class="range_inputs">
           <ul>
             <li ng-repeat="(label, range) in $ctrl.ranges" data-range-key="range" ng-click="$ctrl.clickRange(label, range)" ng-class="{active: label === $ctrl.chosenLabel}">{{label}}</li>
-            <li data-range-key="{{$ctrl.ranges.length + 1}}">Custom Range</li>
+            <li data-range-key="{{$ctrl.ranges.length + 1}}" class="custom-range">Custom Range</li>
           </ul>
       </div>
   </div>
