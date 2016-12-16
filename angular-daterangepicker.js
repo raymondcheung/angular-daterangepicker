@@ -8,7 +8,7 @@
         inputId: '<',
         options: '<'
       },
-      templateUrl: "/daterangepicker.html",
+      templateUrl: "./daterangepicker.html",
       controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
     	var self = this;
         self.left = {};
