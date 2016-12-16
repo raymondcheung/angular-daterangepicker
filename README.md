@@ -10,7 +10,7 @@
 - [Licensing](#licensing)
 
 # Demo
-https://raymondcheung.github.io/angular-daterangepicker/example
+https://raymondcheung.github.io/angular-daterangepicker/demo.html
 
 # Installation
 Currently, this is in development.  So, the only way to install it is to either clone it from this repo, or download it as a zip and unpack it to your project.  Once it's in your project, and has been included(require.js, \<script>, etc.), then you can use by adding the tag do your views.
