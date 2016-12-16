@@ -1,14 +1,16 @@
   angular
     .module('ngDaterangePicker', [])
+    .factory('moment', function($window) {
+      return $window.moment;
+    })
     .component('daterangePicker', {
       bindings: {
-        inputValue: '<',
         inputId: '<',
         options: '<'
       },
-    	templateUrl: "daterangepicker.html",
-    	controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
-	    	var self = this;
+      templateUrl: "/daterangepicker.html",
+      controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
+    	var self = this;
         self.left = {};
         self.right = {};
         self.hourLeftValue=12;
@@ -56,7 +58,6 @@
         self.minDate = (self.options.minDate !== undefined) ? self.options.minDate : false;
         self.maxDate = (self.options.maxDate !== undefined) ? self.options.maxDate : false;
         self.dateLimit = (self.options.dateLimit !== undefined) ? self.options.dateLimit : false;
-        self.autoApply = (self.options.autoApply !== undefined) ? self.options.autoApply : false;
         self.singleDatePicker = (self.options.singleDatePicker !== undefined) ? self.options.singleDatePicker : false;
         self.showDropdowns = (self.options.showDropdowns !== undefined) ? self.options.showDropdowns : false;
         self.showWeekNumbers = (self.options.showWeekNumbers !== undefined) ? self.options.showWeekNumbers : false;
@@ -67,23 +68,18 @@
         self.timePickerIncrement = (self.options.timePickerIncrement !== undefined) ? self.options.timePickerIncrement : 1;
         self.timePickerSeconds = (self.options.timePickerSeconds !== undefined) ? self.options.timePickerSeconds : false;
         self.linkedCalendars = (self.options.linkedCalendars !== undefined) ? self.options.linkedCalendars : true;
-        self.autoUpdateInput = (self.options.autoUpdateInput !== undefined) ? self.options.autoUpdateInput : true;
         self.alwaysShowCalendars = (self.options.alwaysShowCalendars !== undefined) ? self.options.alwaysShowCalendars : false;
 
         self.locale = {
             direction: 'ltr',
             format: moment.localeData().longDateFormat('L'),
             separator: ' - ',
-            applyLabel: 'Apply',
-            cancelLabel: 'Cancel',
             weekLabel: 'W',
             customRangeLabel: 'Custom Range',
             daysOfWeek: moment.weekdaysMin(),
             monthNames: moment.monthsShort(),
             firstDay: moment.localeData().firstDayOfWeek()
         };
-
-        self.callback = function() { };
 
         //some state information
         self.isShowing = false;
@@ -124,6 +120,12 @@
 
             if (typeof options.locale.weekLabel === 'string')
               self.locale.weekLabel = options.locale.weekLabel;
+
+            if (typeof options.locale.fromLabel === 'string')
+              self.locale.fromLabel = options.locale.fromLabel;
+
+            if (typeof options.locale.toLabel === 'string')
+              self.locale.toLabel = options.locale.toLabel;
 
             if (typeof options.locale.customRangeLabel === 'string')
               self.locale.customRangeLabel = options.locale.customRangeLabel;
@@ -213,12 +215,6 @@
         if (typeof options.timePicker24Hour === 'boolean')
             self.timePicker24Hour = options.timePicker24Hour;
 
-        if (typeof options.autoApply === 'boolean')
-            self.autoApply = options.autoApply;
-
-        if (typeof options.autoUpdateInput === 'boolean')
-            self.autoUpdateInput = options.autoUpdateInput;
-
         if (typeof options.linkedCalendars === 'boolean')
             self.linkedCalendars = options.linkedCalendars;
 
@@ -280,36 +276,28 @@
             }
         }
 
-        if (typeof cb === 'function') {
-            self.callback = cb;
-        }
-
         if (!self.timePicker) {
             self.startDate = self.startDate.startOf('day');
             self.endDate = self.endDate.endOf('day');
         }
 
-        //can't be used together for now
-        if (self.timePicker && self.autoApply)
-            self.autoApply = false;
-
-        if (self.autoApply && typeof options.ranges !== 'object') {
-            self.container.find('.ranges').hide();
-        } else if (self.autoApply) {
-            self.container.find('.applyBtn, .cancelBtn').addClass('hide');
-        }
-
         if (self.singleDatePicker) {
-            self.container.addClass('single');
-            self.container.find('.calendar.left').addClass('single');
-            self.container.find('.calendar.left').show();
-            self.container.find('.calendar.right').hide();
-            self.container.find('.daterangepicker_input input, .daterangepicker_input > i').hide();
-            if (self.timePicker) {
-                self.container.find('.ranges ul').hide();
-            } else {
-                self.container.find('.ranges').hide();
-            }
+            // TODO:
+            // The div.daterangepicker width:auto problem needs to be fixed
+            // before singleDatePicker can be worked on because the width
+            // needs to be 'auto' to readjust the div.daterangepicker width
+            // to be smaller because of only one calendar appearing.
+
+            // self.container.addClass('single');
+            // self.container.find('.calendar.left').addClass('single');
+            // self.container.find('.calendar.left').show();
+            // self.container.find('.calendar.right').hide();
+            // self.container.find('.daterangepicker_input input, .daterangepicker_input > i').hide();
+            // if (self.timePicker) {
+            //     self.container.find('.ranges ul').hide();
+            // } else {
+            //     self.container.find('.ranges').hide();
+            // }
         }
 
         if ((typeof options.ranges === 'undefined' && !self.singleDatePicker) || self.alwaysShowCalendars) {
@@ -322,7 +310,9 @@
         if (typeof options.ranges !== 'undefined' && self.opens == 'right') {
             // self.container.find('.ranges').prependTo( self.container.find('.calendar.left').parent() );
         }
+
         $scope.$on('daterangepicker.change', self.formInputsChanged);
+
         self.setStartDate = function(startDate) {
             if (typeof startDate === 'string')
               self.startDate = moment(startDate, self.locale.format);
@@ -555,8 +545,6 @@
           } else {
             self[side].calendar[row][col].available = false;
           }
-
-
           return cname
         };
 
@@ -999,12 +987,11 @@
         };
 
         self.updateElement = function() {
-          if (!self.singleDatePicker && self.autoUpdateInput) {
+          if (!self.singleDatePicker) {
             self.daterangeInputValue = self.startDate.format(self.locale.format) + self.locale.separator + self.endDate.format(self.locale.format);
             $scope.$broadcast('daterangepicker.change');
-          } else if (self.autoUpdateInput) {
-            self.daterangeInputValue = self.startDate.format(self.locale.format);
           }
+          self.daterangeInputValue = self.startDate.format(self.locale.format);
         };
 
         self.formInputsChanged = function(event, args) {

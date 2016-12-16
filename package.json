@@ -1,0 +1,29 @@
+{
+  "name": "angular-daterangepicker",
+  "version": "1.0.0",
+  "description": "Angular implementation of Bootstrap Daterange Picker",
+  "main": "angular-daterangepicker.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raymondcheung/angular-daterangepicker.git"
+  },
+  "author": "Raymond Cheung",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raymondcheung/angular-daterangepicker/issues"
+  },
+  "homepage": "https://github.com/raymondcheung/angular-daterangepicker#readme",
+  "devDependencies": {
+    "jasmine": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.2"
+  }
+}

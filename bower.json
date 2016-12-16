@@ -16,7 +16,10 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "1.5.8",
-    "moment": "^2.15.2"
+    "angular": "1.5.9",
+    "moment": "2.15.2"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.5.9"
   }
 }

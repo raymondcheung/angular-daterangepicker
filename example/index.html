@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title>title</title>
-    <script src="./bower_components/moment/moment.js"></script>
-    <script src="./bower_components/angular/angular.js"></script>
+    <script src="../bower_components/moment/moment.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../angular-daterangepicker.js"></script>
     <script src="./daterangepicker-demo.js"></script>
-    <script src="./angular-daterangepicker.js"></script>
     <meta charset="UTF-8" />
     <title>A date range picker for Bootstrap</title>
-    <link href="./bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" media="all" href="./angular-daterangepicker.css" />
+    <link href="../bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="all" href="../angular-daterangepicker.css" />
     <style type="text/css">
     .demo { 
       position: relative; 
@@ -51,22 +51,17 @@
             <div class="col-md-4">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.autoApply" id="autoApply"> autoApply
+                  <input type="checkbox" ng-model="options.singleDatePicker" ng-init="options.singleDatePicker=false" id="singleDatePicker"> singleDatePicker
                 </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.singleDatePicker" id="singleDatePicker"> singleDatePicker
+                  <input type="checkbox" ng-model="options.showDropdowns" id="showDropdowns" ng-init="options.showDropdowns=false"> showDropdowns
                 </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.showDropdowns" id="showDropdowns" ng-init="options.showDropdowns=true"> showDropdowns
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" ng-model="options.showWeekNumbers" id="showWeekNumbers" ng-init="options.showWeekNumbers=true"> showWeekNumbers
+                  <input type="checkbox" ng-model="options.showWeekNumbers" id="showWeekNumbers" ng-init="options.showWeekNumbers=false"> showWeekNumbers
                 </label>
               </div>
               <div class="checkbox">
@@ -76,7 +71,7 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.timePicker" id="timePicker" ng-init="options.timePicker=true"> timePicker
+                  <input type="checkbox" ng-model="options.timePicker" id="timePicker" ng-init="options.timePicker=false"> timePicker
                 </label>
               </div>
               <div class="checkbox">
@@ -108,30 +103,12 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.localeEnabled" 
-                    ng-init="options.localeEnabled=true;options.locale = {
-                              format: 'MM/DD/YYYY HH:mm:ss',
-                              separator: ' - ',
-                              applyLabel: 'Apply',
-                              cancelLabel: 'Cancel',
-                              fromLabel: 'From',
-                              toLabel: 'To',
-                              customRangeLabel: 'Custom',
-                              daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-                              monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                              firstDay: 1
-                            };" 
-                  id="locale"> locale (with example settings)
+                  <input type="checkbox" ng-model="options.locale" id="locale"> locale (with example settings)
                 </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.linkedCalendars" id="linkedCalendars" ng-init="options.linkedCalendars=true"> linkedCalendars
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" ng-model="options.autoUpdateInput" id="autoUpdateInput" checked="checked"> autoUpdateInput
+                  <input type="checkbox" ng-model="options.linkedCalendars" id="linkedCalendars" ng-init="options.linkedCalendars=false"> linkedCalendars
                 </label>
               </div>
               <div class="checkbox">
