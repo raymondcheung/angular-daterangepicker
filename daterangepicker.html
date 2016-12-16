@@ -1,6 +1,5 @@
-<span class="bloo">blblb</span>
 <input type="text" id="{{$ctrl.inputId}}" class="form-control" ng-model="$ctrl.daterangeInputValue" ng-focus="$ctrl.isShowing=true" />
-<div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}}" ng-class="$ctrl.getDaterangepickerClasses()">
+<div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}}" ng-cloak ng-class="$ctrl.getDaterangepickerClasses()">
   <div class="ranges">
       <div class="range_inputs">
           <ul>
@@ -128,17 +127,4 @@
         </table>
       </div>
   </div>
-<<<<<<< HEAD
-
-
-  <div class="ranges">
-      <div class="range_inputs">
-          <ul>
-            <li ng-repeat="(label, range) in $ctrl.ranges" data-range-key="range" ng-click="$ctrl.clickRange(label, range)" ng-class="{active: label === $ctrl.chosenLabel}">{{label}}</li>
-            <li data-range-key="{{$ctrl.ranges.length + 1}}" class="custom-range">Custom Range</li>
-          </ul>
-      </div>
-  </div>
-=======
->>>>>>> 2b754b8b61592578954684e55851827075377f62
 </div>
