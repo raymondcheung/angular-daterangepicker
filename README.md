@@ -24,7 +24,7 @@ AngularJS 1.5+
 Moment.js 2.15.2+
 
 # Tests
-Coming soon!
+After doing an 'npm install' and 'bower install', execute './node_modules/karma/bin/karma start' from the top level of this project to execute unit tests.
 
 # Options
 - startDate (Date object, moment object or string) The start of the initially selected date range
