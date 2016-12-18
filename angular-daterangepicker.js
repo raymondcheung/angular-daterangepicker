@@ -317,6 +317,7 @@
             if (typeof startDate === 'string')
               self.startDate = moment(startDate, self.locale.format);
 
+
             if (typeof startDate === 'object')
               self.startDate = moment(startDate);
 
@@ -328,58 +329,48 @@
 
             if (self.minDate && self.startDate.isBefore(self.minDate)) {
               self.startDate = self.minDate.clone();
-        	    if (self.timePicker && self.timePickerIncrement)
-              self.startDate.minute(Math.round(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
-        }
+       	      if (self.timePicker && self.timePickerIncrement)
+                self.startDate.minute(Math.round(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+            }
 
-        if (self.maxDate && self.startDate.isAfter(self.maxDate)) {
-          self.startDate = self.maxDate.clone();
-          if (self.timePicker && self.timePickerIncrement)
-            self.startDate.minute(Math.floor(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
-        }
+            if (self.maxDate && self.startDate.isAfter(self.maxDate)) {
+              self.startDate = self.maxDate.clone();
+              if (self.timePicker && self.timePickerIncrement)
+                self.startDate.minute(Math.floor(self.startDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+            }
 
-        if (!self.isShowing)
-          self.updateElement();
-
-        self.updateMonthsInView();
-        };
-
-        self.setEndDate = function(endDate) {
-        if (typeof endDate === 'string')
-            self.endDate = moment(endDate, self.locale.format);
-
-        if (typeof endDate === 'object')
-            self.endDate = moment(endDate);
-
-        if (!self.timePicker)
-            self.endDate = self.endDate.endOf('day');
-
-        if (self.timePicker && self.timePickerIncrement)
-            self.endDate.minute(Math.round(self.endDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
-
-        if (self.endDate.isBefore(self.startDate))
-            self.endDate = self.startDate.clone();
-
-        if (self.maxDate && self.endDate.isAfter(self.maxDate))
-            self.endDate = self.maxDate.clone();
-
-        if (self.dateLimit && self.startDate.clone().add(self.dateLimit).isBefore(self.endDate))
-            self.endDate = self.startDate.clone().add(self.dateLimit);
-
-        self.previousRightTime = self.endDate.clone();
-
-        if (!self.isShowing)
-            self.updateElement();
+            if (!self.isShowing)
+              self.updateElement();
 
             self.updateMonthsInView();
         };
 
-        self.isInvalidDate = function() {
-            return false;
-        };
+        self.setEndDate = function(endDate) {
+            if (typeof endDate === 'string')
+                self.endDate = moment(endDate, self.locale.format);
 
-        self.isCustomDate = function() {
-            return false;
+            if (typeof endDate === 'object')
+                self.endDate = moment(endDate);
+
+            if (!self.timePicker)
+                self.endDate = self.endDate.endOf('day');
+
+            if (self.timePicker && self.timePickerIncrement)
+                self.endDate.minute(Math.round(self.endDate.minute() / self.timePickerIncrement) * self.timePickerIncrement);
+
+            if (self.endDate.isBefore(self.startDate))
+                self.endDate = self.startDate.clone();
+
+            if (self.maxDate && self.endDate.isAfter(self.maxDate))
+                self.endDate = self.maxDate.clone();
+
+            if (self.dateLimit && self.startDate.clone().add(self.dateLimit).isBefore(self.endDate))
+                self.endDate = self.startDate.clone().add(self.dateLimit);
+
+            if (!self.isShowing)
+                self.updateElement();
+            
+            self.updateMonthsInView();
         };
 
         self.updateView = function() {

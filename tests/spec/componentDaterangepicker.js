@@ -7,7 +7,7 @@ describe('daterangePickerComponent: ', function() {
 
   beforeEach(module('ngDaterangePicker'));
   beforeEach(inject(function(_$componentController_, $httpBackend, $rootScope, $compile) {
-    $httpBackend.whenGET('/daterangepicker.html').respond(200, '');
+    $httpBackend.whenGET('./daterangepicker.html').respond(200, '');
     $scope = $rootScope.$new();
     element = angular.element('<daterange-picker input-id="config-demo options="{{options}}"></daterange-picker>');
     element = $compile(element)($scope);
@@ -161,5 +161,68 @@ describe('daterangePickerComponent: ', function() {
     };
     var ctrl = $componentController('daterangePicker', null, {options: {locale: locale}});
     expect(ctrl.locale.daysOfWeek).toEqual(['Mo', 'Tu', 'We', 'Th', 'Fr','Sa', 'Su'])
+  });
+  it('should set default time to 12:00:00 when timepicker is enabled', function() {
+    var bindings = {
+      options: {
+        timePicker: true,
+      }
+    };
+    var ctrl = $componentController('daterangePicker', null, bindings);
+    expect(ctrl.hourLeftValue).toBe(12);
+    expect(ctrl.minuteLeftValue).toBe(0);
+    expect(ctrl.secondLeftValue).toBe(0);
+    expect(ctrl.hourRightValue).toBe(12);
+    expect(ctrl.minuteRightValue).toBe(0);
+    expect(ctrl.secondRightValue).toBe(0);
+  });
+  it('should set the start date when self.startDate is called with a string', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    ctrl.setStartDate('04/20/2016');
+    expect(ctrl.startDate.format()).toEqual(moment('04/20/2016', ctrl.locale.format).format());
+  });
+  it('should set the start date when self.startDate is called with a moment object', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    ctrl.setStartDate(moment('04/20/2016', ctrl.locale.format));
+    expect(ctrl.startDate.format()).toEqual(moment('04/20/2016', ctrl.locale.format).format());
+  });
+  it('should set the end date if self.setEndDate is called with an string and a valid start date was set', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    ctrl.setStartDate('04/20/2016');
+    ctrl.setEndDate('08/21/2016');
+    expect(ctrl.endDate.format()).toEqual(moment('08/21/2016', ctrl.locale.format).endOf('day').format());
+  });
+  it('should set the end date if self.setEndDate is called with a moment object and a valid start date was set', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    ctrl.setStartDate(moment('04/20/2016', ctrl.locale.format));
+    ctrl.setEndDate(moment('08/21/2016', ctrl.locale.format));
+    expect(ctrl.endDate.format()).toEqual(moment('08/21/2016', ctrl.locale.format).endOf('day').format());
+  });
+  it('should set the end date to today if self.setEndDate is called with an string but the start date was not set', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    ctrl.setEndDate('08/21/2016');
+    expect(ctrl.endDate.format()).toEqual(moment().startOf('day').format());
+  });
+  it('should set the end date to today if self.setEndDate is called with a moment object but the start date was not set', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    ctrl.setEndDate(moment('08/21/2016', ctrl.locale.format));
+    expect(ctrl.endDate.format()).toEqual(moment().startOf('day').format());
+  });
+  it('should set the start date to min date if self.setStartDate is called with a date before min date', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: { minDate: '02/14/2016'}});
+    ctrl.setStartDate('01/20/2016');
+    expect(ctrl.startDate.format()).toEqual(moment('02/14/2016', ctrl.locale.format).format());
+  });
+  it('should set the end date to max date if self.setEndDate is called with a date after max date', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: { maxDate: '11/02/2016'}});
+    ctrl.setEndDate('12/02/2016');
+    expect(ctrl.endDate.format()).toEqual(moment('11/02/2016', ctrl.locale.format).format());
+  });
+  it('should set end date to the start date + date limit if self.endDate is called with a date that is past the start date + date limit', function() {
+    var dateLimit = {'days': 7};
+    var ctrl = $componentController('daterangePicker', null, {options: { dateLimit: dateLimit}});
+    ctrl.setStartDate('01/02/2016');
+    ctrl.setEndDate('01/20/2016');
+    expect(ctrl.endDate.format()).toEqual(ctrl.startDate.add(dateLimit.days, 'days').format());
   });
 });
