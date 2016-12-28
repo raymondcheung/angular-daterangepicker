@@ -369,7 +369,7 @@
 
             if (!self.isShowing)
                 self.updateElement();
-            
+
             self.updateMonthsInView();
         };
 
@@ -500,7 +500,7 @@
               classes.push('off', 'disabled');
 
           //don't allow selection of date if a custom function decides it's invalid
-          if (self.isInvalidDate(calendar[row][col].date))
+          if (self.isInvalidDate && self.isInvalidDate(calendar[row][col].date))
               classes.push('off', 'disabled');
 
           //highlight the currently selected start date
@@ -516,7 +516,8 @@
               classes.push('in-range');
 
           //apply custom classes for this date
-          var isCustom = self.isCustomDate(calendar[row][col].date);
+          if (self.isCustomDate)
+              var isCustom = self.isCustomDate(calendar[row][col].date);
           if (isCustom !== false) {
               if (typeof isCustom === 'string')
                   classes.push(isCustom);
