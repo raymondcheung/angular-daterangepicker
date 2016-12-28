@@ -218,11 +218,21 @@
         if (typeof options.linkedCalendars === 'boolean')
             self.linkedCalendars = options.linkedCalendars;
 
-        if (typeof options.isInvalidDate === 'function')
+        if (typeof options.isInvalidDate === 'function') {
             self.isInvalidDate = options.isInvalidDate;
+        } else {            
+            self.isInvalidDate = function() {
+                return false;
+            };
+        }
 
-        if (typeof options.isCustomDate === 'function')
+        if (typeof options.isCustomDate === 'function') {
             self.isCustomDate = options.isCustomDate;
+        } else {
+            self.isCustomDate = function() {
+                return false;
+            };
+        }
 
         if (typeof options.alwaysShowCalendars === 'boolean')
             self.alwaysShowCalendars = options.alwaysShowCalendars;
@@ -500,7 +510,7 @@
               classes.push('off', 'disabled');
 
           //don't allow selection of date if a custom function decides it's invalid
-          if (self.isInvalidDate && self.isInvalidDate(calendar[row][col].date))
+          if (self.isInvalidDate(calendar[row][col].date))
               classes.push('off', 'disabled');
 
           //highlight the currently selected start date
@@ -516,8 +526,7 @@
               classes.push('in-range');
 
           //apply custom classes for this date
-          if (self.isCustomDate)
-              var isCustom = self.isCustomDate(calendar[row][col].date);
+          var isCustom = self.isCustomDate(calendar[row][col].date);
           if (isCustom !== false) {
               if (typeof isCustom === 'string')
                   classes.push(isCustom);
