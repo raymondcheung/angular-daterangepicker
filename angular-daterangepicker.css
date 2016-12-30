@@ -205,6 +205,10 @@
 
 /*  Larger Screen Styling */
 @media (min-width: 564px) {
+  .daterangepicker-wrapper {
+    width:800px;
+    position:relative;
+  }
   .daterangepicker {
     width: auto; } 
     .daterangepicker .ranges ul {

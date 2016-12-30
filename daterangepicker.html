@@ -1,4 +1,5 @@
 <input type="text" id="{{$ctrl.inputId}}" class="form-control" ng-model="$ctrl.daterangeInputValue" ng-focus="$ctrl.isShowing=true" />
+<div class="daterangepicker-wrapper">
 <div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}}" ng-cloak ng-class="$ctrl.getDaterangepickerClasses()">
   <div class="ranges">
       <div class="range_inputs">
@@ -127,4 +128,5 @@
         </table>
       </div>
   </div>
+</div>
 </div>
