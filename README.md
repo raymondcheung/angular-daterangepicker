@@ -28,6 +28,7 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 # Options
 ## Dropped(configurations from Bootstrap Daterange Picker that will not be ported)
 - parentEl
+- opens: (string: 'left'/'right'/'center') Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to
 - autoUpdateInput: (boolean) Indicates whether the date range picker should automatically update the value of an <input> element it's attached to at initialization and when the selected dates change.
 
 ## Unsupported(no decision yet on whether it will be worked on)
@@ -38,7 +39,6 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 - isCustomDate: (function) A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.
 
 ## Not yet fully implemented
-- opens: (string: 'left'/'right'/'center') Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to
 - drops: (string: 'down' or 'up') Whether the picker appears below (default) or above the HTML element it's attached to
 - singleDatePicker: (boolean) Show only a single calendar to choose one date, instead of a range picker with two calendars; the start and end dates provided to your callback will be the same single date chosen
 - dateLimit: (object) The maximum span between the selected start and end dates. Can have any property you can add to a moment object (i.e. days, months)
