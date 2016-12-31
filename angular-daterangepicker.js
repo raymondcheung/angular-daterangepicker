@@ -43,7 +43,6 @@
 
         self.getDaterangepickerClasses = function() {
           var classes = [];
-          classes.push('opens' + self.opens);
           if (self.singleDatePicker || self.alwaysShowCalendars) {
             classes.push('single');
           } else {
@@ -172,9 +171,6 @@
 
         if (typeof options.dateLimit === 'object')
             self.dateLimit = options.dateLimit;
-
-        if (typeof options.opens === 'string')
-            self.opens = options.opens;
 
         if (typeof options.drops === 'string')
             self.drops = options.drops;
@@ -312,13 +308,6 @@
 
         if ((typeof options.ranges === 'undefined' && !self.singleDatePicker) || self.alwaysShowCalendars) {
             self.showCalendarClass = 'show-calendar';
-        }
-
-        self.opensClass = 'opens' + self.opens;
-
-        //swap the position of the predefined ranges if opens right
-        if (typeof options.ranges !== 'undefined' && self.opens == 'right') {
-            // self.container.find('.ranges').prependTo( self.container.find('.calendar.left').parent() );
         }
 
         $scope.$on('daterangepicker.change', self.formInputsChanged);
@@ -929,43 +918,16 @@
                 containerTop = self.element.offset().top + self.element.outerHeight() - parentOffset.top;
             self.container[self.drops == 'up' ? 'addClass' : 'removeClass']('dropup');
 
-            if (self.opens == 'left') {
+            self.container.css({
+                top: containerTop,
+                left: self.element.offset().left - parentOffset.left,
+                right: 'auto'
+            });
+            if (self.container.offset().left + self.container.outerWidth() > $(window).width()) {
                 self.container.css({
-                    top: containerTop,
-                    right: parentRightEdge - self.element.offset().left - self.element.outerWidth(),
-                    left: 'auto'
+                    left: 'auto',
+                    right: 0
                 });
-                if (self.container.offset().left < 0) {
-                    self.container.css({
-                        right: 'auto',
-                        left: 9
-                    });
-                }
-            } else if (self.opens == 'center') {
-                self.container.css({
-                    top: containerTop,
-                    left: self.element.offset().left - parentOffset.left + self.element.outerWidth() / 2
-                            - self.container.outerWidth() / 2,
-                    right: 'auto'
-                });
-                if (self.container.offset().left < 0) {
-                    self.container.css({
-                        right: 'auto',
-                        left: 9
-                    });
-                }
-            } else {
-                self.container.css({
-                    top: containerTop,
-                    left: self.element.offset().left - parentOffset.left,
-                    right: 'auto'
-                });
-                if (self.container.offset().left + self.container.outerWidth() > $(window).width()) {
-                    self.container.css({
-                        left: 'auto',
-                        right: 0
-                    });
-                }
             }
         };
 
