@@ -172,9 +172,6 @@
         if (typeof options.dateLimit === 'object')
             self.dateLimit = options.dateLimit;
 
-        if (typeof options.drops === 'string')
-            self.drops = options.drops;
-
         if (typeof options.showWeekNumbers === 'boolean')
             self.showWeekNumbers = options.showWeekNumbers;
 
