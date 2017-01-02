@@ -900,37 +900,6 @@
           self.updateCalendars();
         };
 
-        self.move = function() {
-            var parentOffset = { top: 0, left: 0 },
-                containerTop;
-            var parentRightEdge = $(window).width();
-            if (!self.parentEl.is('body')) {
-                parentOffset = {
-                    top: self.parentEl.offset().top - self.parentEl.scrollTop(),
-                    left: self.parentEl.offset().left - self.parentEl.scrollLeft()
-                };
-                parentRightEdge = self.parentEl[0].clientWidth + self.parentEl.offset().left;
-            }
-
-            if (self.drops == 'up')
-                containerTop = self.element.offset().top - self.container.outerHeight() - parentOffset.top;
-            else
-                containerTop = self.element.offset().top + self.element.outerHeight() - parentOffset.top;
-            self.container[self.drops == 'up' ? 'addClass' : 'removeClass']('dropup');
-
-            self.container.css({
-                top: containerTop,
-                left: self.element.offset().left - parentOffset.left,
-                right: 'auto'
-            });
-            if (self.container.offset().left + self.container.outerWidth() > $(window).width()) {
-                self.container.css({
-                    left: 'auto',
-                    right: 0
-                });
-            }
-        };
-
         self.clickRange = function(label, range) {
           self.chosenLabel = label;
           if (label === self.locale.customRangeLabel) {
