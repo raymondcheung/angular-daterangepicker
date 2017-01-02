@@ -71,7 +71,6 @@
 
         self.locale = {
             direction: 'ltr',
-            format: moment.localeData().longDateFormat('L'),
             separator: ' - ',
             weekLabel: 'W',
             customRangeLabel: 'Custom Range',
@@ -79,6 +78,15 @@
             monthNames: moment.monthsShort(),
             firstDay: moment.localeData().firstDayOfWeek()
         };
+        if (self.timePicker) {
+            if (self.timePickerSeconds) {
+                self.locale.format = 'MM/DD/YYYY HH:mm:ss';
+            } else {
+                self.locale.format = 'MM/DD/YYYY HH:mm';
+            }
+        } else {
+            self.locale.format = moment.localeData().longDateFormat('L');
+        }
 
         //some state information
         self.isShowing = false;

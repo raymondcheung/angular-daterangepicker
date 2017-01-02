@@ -71,7 +71,7 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.timePicker" id="timePicker" ng-init="options.timePicker=false"> timePicker
+                  <input type="checkbox" ng-model="options.timePicker" id="timePicker" ng-init="options.timePicker=true"> timePicker
                 </label>
               </div>
               <div class="checkbox">
@@ -85,7 +85,7 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.timePickerSeconds" id="timePickerSeconds"> timePickerSeconds
+                  <input type="checkbox" ng-model="options.timePickerSeconds" id="timePickerSeconds" ng-init="options.timePickerSeconds=true"> timePickerSeconds
                 </label>
               </div>
               <div class="checkbox">
@@ -97,13 +97,13 @@
                 <label>
                   <!-- Only the options.ranges value needs to be set in order for the calendar to function correctly, setting rangesEnabled is solely for the purpose of the input box for the demo; so rangesEnabled is not used anywhere in the DaterangePicker code -->
                   <input type="checkbox" ng-model="options.rangesEnabled" 
-                  ng-init="options.rangesEnabled=true;" 
+                  ng-init="options.rangesEnabled=true" 
                   id="ranges"> ranges (with example predefined ranges)
                 </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="options.locale" id="locale"> locale (with example settings)
+                  <input type="checkbox" ng-model="options.localeEnabled" id="locale" ng-init="options.localeEnabled=true"> locale (with example settings)
                 </label>
               </div>
               <div class="checkbox">
@@ -143,7 +143,9 @@
           <div class="col-md-6">
             <h4>Configuration</h4>
             <div class="well">
-              <textarea id="config-text" style="height: 300px; width: 100%; padding: 10px"></textarea>
+              <pre style="text-indent:0">
+                Options = {{options | json}}
+              </pre>
             </div>
           </div>
         </div>
