@@ -8,37 +8,307 @@
         inputId: '<',
         options: '<'
       },
-      templateUrl: "./daterangepicker.html",
+      templateUrl: "./angular-daterangepicker.html",
       controller: ['$scope', '$document', 'moment', function($scope, $document, moment) {
-    	var self = this;
-        self.left = {};
-        self.right = {};
-        self.hourLeftValue=12;
-        self.minuteLeftValue=0;
-        self.secondLeftValue=0;
-        self.hourRightValue=12;
-        self.minuteRightValue=0;
-        self.secondRightValue=0;
+        var self = this;
+        self.init = function() {
+            self.left = {};
+            self.right = {};
+            self.hourLeftValue=12;
+            self.minuteLeftValue=0;
+            self.secondLeftValue=0;
+            self.hourRightValue=12;
+            self.minuteRightValue=0;
+            self.secondRightValue=0;
 
-        // TODO:
-        // This does not seem like the Angular way to figure out
-        // if the click was on the daterange picker, but I couldn't
-        // figure out a way to have the daterange picker listen for
-        // all clicks in the window to determine if it was clicked on.
-        $document.on('click', function(e) {          
-          var clickedOnDaterangePicker = false;
-          for(var i in e.path) {
-            if (e.path[i].tagName == "DATERANGE-PICKER") {
-              clickedOnDaterangePicker = true;
-            }
-          }
-          $scope.$apply(function() {
-            if(clickedOnDaterangePicker) {
-              self.isShowing = true;
+            // TODO:
+            // This does not seem like the Angular way to figure out
+            // if the click was on the daterange picker, but I couldn't
+            // figure out a way to have the daterange picker listen for
+            // all clicks in the window to determine if it was clicked on.
+            $document.on('click', function(e) {          
+              var clickedOnDaterangePicker = false;
+              for(var i in e.path) {
+                if (e.path[i].tagName == "DATERANGE-PICKER") {
+                  clickedOnDaterangePicker = true;
+                }
+              }
+              $scope.$apply(function() {
+                if(clickedOnDaterangePicker) {
+                  self.isShowing = true;
+                } else {
+                  self.isShowing = false;
+                }
+              });
+            });
+
+            //default settings for options
+            self.startDate = (self.options.startDate !== undefined) ? self.options.startDate : moment().startOf('day');
+            self.endDate = (self.options.endDate !== undefined) ? self.options.endDate : moment().endOf('day');
+            self.minDate = (self.options.minDate !== undefined) ? self.options.minDate : false;
+            self.maxDate = (self.options.maxDate !== undefined) ? self.options.maxDate : false;
+            self.dateLimit = (self.options.dateLimit !== undefined) ? self.options.dateLimit : false;
+            self.singleDatePicker = (self.options.singleDatePicker !== undefined) ? self.options.singleDatePicker : false;
+            self.showDropdowns = (self.options.showDropdowns !== undefined) ? self.options.showDropdowns : false;
+            self.showWeekNumbers = (self.options.showWeekNumbers !== undefined) ? self.options.showWeekNumbers : false;
+            self.showISOWeekNumbers = (self.options.showISOWeekNumbers !== undefined) ? self.options.showISOWeekNumbers : false;
+            self.showCustomRangeLabel = (self.options.customRangeLabel !== undefined) ? self.options.customRangeLabel : true;
+            self.timePicker = (self.options.timePicker !== undefined) ? self.options.timePicker : false;
+            self.timePicker24Hour = (self.options.timePicker24Hour !== undefined) ? self.options.timePicker24Hour : false;
+            self.timePickerIncrement = (self.options.timePickerIncrement !== undefined) ? self.options.timePickerIncrement : 1;
+            self.timePickerSeconds = (self.options.timePickerSeconds !== undefined) ? self.options.timePickerSeconds : false;
+            self.linkedCalendars = (self.options.linkedCalendars !== undefined) ? self.options.linkedCalendars : true;
+            self.alwaysShowCalendars = (self.options.alwaysShowCalendars !== undefined) ? self.options.alwaysShowCalendars : false;
+
+            self.locale = {
+                direction: 'ltr',
+                separator: ' - ',
+                weekLabel: 'W',
+                customRangeLabel: 'Custom Range',
+                daysOfWeek: moment.weekdaysMin(),
+                monthNames: moment.monthsShort(),
+                firstDay: moment.localeData().firstDayOfWeek()
+            };
+            if (self.timePicker) {
+                if (self.timePickerSeconds) {
+                    self.locale.format = 'MM/DD/YYYY HH:mm:ss';
+                } else {
+                    self.locale.format = 'MM/DD/YYYY HH:mm';
+                }
             } else {
-              self.isShowing = false;
+                self.locale.format = moment.localeData().longDateFormat('L');
             }
-          });
+
+            //some state information
+            self.isShowing = false;
+            self.left.calendar = {};
+            self.right.calendar = {};
+
+            var options = self.options !== undefined ? angular.copy(self.options) : {};
+
+            //
+            // handle all the possible options overriding defaults
+            //
+
+            if (typeof options.locale === 'object') {
+
+                if (typeof options.locale.direction === 'string')
+                    self.locale.direction = options.locale.direction;
+
+                if (typeof options.locale.format === 'string')
+                    self.locale.format = options.locale.format;
+
+                if (typeof options.locale.separator === 'string')
+                    self.locale.separator = options.locale.separator;
+
+                if (typeof options.locale.daysOfWeek === 'object')
+                    self.locale.daysOfWeek = options.locale.daysOfWeek.slice();
+
+                if (typeof options.locale.monthNames === 'object')
+                  self.locale.monthNames = options.locale.monthNames.slice();
+
+                if (typeof options.locale.firstDay === 'number')
+                  self.locale.firstDay = options.locale.firstDay;
+
+                if (typeof options.locale.applyLabel === 'string')
+                  self.locale.applyLabel = options.locale.applyLabel;
+
+                if (typeof options.locale.cancelLabel === 'string')
+                  self.locale.cancelLabel = options.locale.cancelLabel;
+
+                if (typeof options.locale.weekLabel === 'string')
+                  self.locale.weekLabel = options.locale.weekLabel;
+
+                if (typeof options.locale.fromLabel === 'string')
+                  self.locale.fromLabel = options.locale.fromLabel;
+
+                if (typeof options.locale.toLabel === 'string')
+                  self.locale.toLabel = options.locale.toLabel;
+
+                if (typeof options.locale.customRangeLabel === 'string')
+                  self.locale.customRangeLabel = options.locale.customRangeLabel;
+
+            }
+
+            if (typeof options.startDate === 'string')
+                self.startDate = moment(options.startDate, self.locale.format);
+
+            if (typeof options.endDate === 'string')
+                self.endDate = moment(options.endDate, self.locale.format);
+
+            if (typeof options.minDate === 'string')
+                self.minDate = moment(options.minDate, self.locale.format);
+
+            if (typeof options.maxDate === 'string')
+                self.maxDate = moment(options.maxDate, self.locale.format);
+
+            if (typeof options.startDate === 'object')
+                self.startDate = moment(options.startDate);
+
+            if (typeof options.endDate === 'object')
+                self.endDate = moment(options.endDate);
+
+            if (typeof options.minDate === 'object')
+                self.minDate = moment(options.minDate);
+
+            if (typeof options.maxDate === 'object')
+                self.maxDate = moment(options.maxDate);
+
+            // sanity check for bad options
+            if (self.minDate && self.startDate.isBefore(self.minDate))
+                self.startDate = self.minDate.clone();
+
+            // sanity check for bad options
+            if (self.maxDate && self.endDate.isAfter(self.maxDate))
+                self.endDate = self.maxDate.clone();
+
+            if (typeof options.applyClass === 'string')
+                self.applyClass = options.applyClass;
+
+            if (typeof options.cancelClass === 'string')
+                self.cancelClass = options.cancelClass;
+
+            if (typeof options.dateLimit === 'object')
+                self.dateLimit = options.dateLimit;
+
+            if (typeof options.showWeekNumbers === 'boolean')
+                self.showWeekNumbers = options.showWeekNumbers;
+
+            if (typeof options.showISOWeekNumbers === 'boolean')
+                self.showISOWeekNumbers = options.showISOWeekNumbers;
+
+            if (typeof options.buttonClasses === 'string')
+                self.buttonClasses = options.buttonClasses;
+
+            if (typeof options.buttonClasses === 'object')
+                self.buttonClasses = options.buttonClasses.join(' ');
+
+            if (typeof options.showDropdowns === 'boolean')
+                self.showDropdowns = options.showDropdowns;
+
+            if (typeof options.showCustomRangeLabel === 'boolean')
+                self.showCustomRangeLabel = options.showCustomRangeLabel;
+
+            if (typeof options.singleDatePicker === 'boolean') {
+                self.singleDatePicker = options.singleDatePicker;
+                if (self.singleDatePicker)
+                    self.endDate = self.startDate.clone();
+            }
+
+            if (typeof options.timePicker === 'boolean')
+                self.timePicker = options.timePicker;
+
+            if (typeof options.timePickerSeconds === 'boolean')
+                self.timePickerSeconds = options.timePickerSeconds;
+
+            if (typeof options.timePickerIncrement === 'number')
+                self.timePickerIncrement = options.timePickerIncrement;
+
+            if (typeof options.timePicker24Hour === 'boolean')
+                self.timePicker24Hour = options.timePicker24Hour;
+
+            if (typeof options.linkedCalendars === 'boolean')
+                self.linkedCalendars = options.linkedCalendars;
+
+            if (typeof options.isInvalidDate === 'function') {
+                self.isInvalidDate = options.isInvalidDate;
+            } else {            
+                self.isInvalidDate = function() {
+                    return false;
+                };
+            }
+
+            if (typeof options.isCustomDate === 'function') {
+                self.isCustomDate = options.isCustomDate;
+            } else {
+                self.isCustomDate = function() {
+                    return false;
+                };
+            }
+
+            if (typeof options.alwaysShowCalendars === 'boolean')
+                self.alwaysShowCalendars = options.alwaysShowCalendars;
+
+            // update day names order to firstDay
+            if (self.locale.firstDay != 0) {
+                var iterator = self.locale.firstDay;
+                while (iterator > 0) {
+                    self.locale.daysOfWeek.push(self.locale.daysOfWeek.shift());
+                    iterator--;
+                }
+            }
+
+            if (typeof options.ranges === 'object') {
+                self.ranges = {};
+                for (range in options.ranges) {
+
+                    if (typeof options.ranges[range][0] === 'string')
+                        start = moment(options.ranges[range][0], self.locale.format);
+                    else
+                        start = moment(options.ranges[range][0]);
+
+                    if (typeof options.ranges[range][1] === 'string')
+                        end = moment(options.ranges[range][1], self.locale.format);
+                    else
+                        end = moment(options.ranges[range][1]);
+
+                    // If the start or end date exceed those allowed by the minDate or dateLimit
+                    // options, shorten the range to the allowable period.
+                    if (self.minDate && start.isBefore(self.minDate))
+                        start = self.minDate.clone();
+
+                    var maxDate = self.maxDate;
+                    if (self.dateLimit && maxDate && start.clone().add(self.dateLimit).isAfter(maxDate))
+                        maxDate = start.clone().add(self.dateLimit);
+                    if (maxDate && end.isAfter(maxDate))
+                        end = maxDate.clone();
+
+                    // If the end of the range is before the minimum or the start of the range is
+                    // after the maximum, don't display self range option at all.
+                    if ((self.minDate && end.isBefore(self.minDate, self.timePicker ? 'minute' : 'day')) 
+                      || (maxDate && start.isAfter(maxDate, self.timePicker ? 'minute' : 'day')))
+                        continue;
+
+                    //Support unicode chars in the range names.
+                    var elem = document.createElement('textarea');
+                    elem.innerHTML = range;
+                    var rangeHtml = elem.value;
+
+                    self.ranges[rangeHtml] = [start, end];
+                }
+            }
+
+            if (!self.timePicker) {
+                self.startDate = self.startDate.startOf('day');
+                self.endDate = self.endDate.endOf('day');
+            }
+
+            if (self.singleDatePicker) {
+                // TODO:
+                // The div.daterangepicker width:auto problem needs to be fixed
+                // before singleDatePicker can be worked on because the width
+                // needs to be 'auto' to readjust the div.daterangepicker width
+                // to be smaller because of only one calendar appearing.
+
+                // self.container.addClass('single');
+                // self.container.find('.calendar.left').addClass('single');
+                // self.container.find('.calendar.left').show();
+                // self.container.find('.calendar.right').hide();
+                // self.container.find('.daterangepicker_input input, .daterangepicker_input > i').hide();
+                // if (self.timePicker) {
+                //     self.container.find('.ranges ul').hide();
+                // } else {
+                //     self.container.find('.ranges').hide();
+                // }
+            }
+
+            if ((typeof options.ranges === 'undefined' && !self.singleDatePicker) || self.alwaysShowCalendars) {
+                self.showCalendarClass = 'show-calendar';
+            }
+        };
+        self.init();
+        $scope.$on('daterangepicker.reload', function() {
+            self.init();
         });
 
         self.getDaterangepickerClasses = function() {
@@ -50,270 +320,6 @@
           }
           return classes;
         };
-
-        //default settings for options
-        self.startDate = (self.options.startDate !== undefined) ? self.options.startDate : moment().startOf('day');
-        self.endDate = (self.options.endDate !== undefined) ? self.options.endDate : moment().endOf('day');
-        self.minDate = (self.options.minDate !== undefined) ? self.options.minDate : false;
-        self.maxDate = (self.options.maxDate !== undefined) ? self.options.maxDate : false;
-        self.dateLimit = (self.options.dateLimit !== undefined) ? self.options.dateLimit : false;
-        self.singleDatePicker = (self.options.singleDatePicker !== undefined) ? self.options.singleDatePicker : false;
-        self.showDropdowns = (self.options.showDropdowns !== undefined) ? self.options.showDropdowns : false;
-        self.showWeekNumbers = (self.options.showWeekNumbers !== undefined) ? self.options.showWeekNumbers : false;
-        self.showISOWeekNumbers = (self.options.showISOWeekNumbers !== undefined) ? self.options.showISOWeekNumbers : false;
-        self.showCustomRangeLabel = (self.options.customRangeLabel !== undefined) ? self.options.customRangeLabel : true;
-        self.timePicker = (self.options.timePicker !== undefined) ? self.options.timePicker : false;
-        self.timePicker24Hour = (self.options.timePicker24Hour !== undefined) ? self.options.timePicker24Hour : false;
-        self.timePickerIncrement = (self.options.timePickerIncrement !== undefined) ? self.options.timePickerIncrement : 1;
-        self.timePickerSeconds = (self.options.timePickerSeconds !== undefined) ? self.options.timePickerSeconds : false;
-        self.linkedCalendars = (self.options.linkedCalendars !== undefined) ? self.options.linkedCalendars : true;
-        self.alwaysShowCalendars = (self.options.alwaysShowCalendars !== undefined) ? self.options.alwaysShowCalendars : false;
-
-        self.locale = {
-            direction: 'ltr',
-            separator: ' - ',
-            weekLabel: 'W',
-            customRangeLabel: 'Custom Range',
-            daysOfWeek: moment.weekdaysMin(),
-            monthNames: moment.monthsShort(),
-            firstDay: moment.localeData().firstDayOfWeek()
-        };
-        if (self.timePicker) {
-            if (self.timePickerSeconds) {
-                self.locale.format = 'MM/DD/YYYY HH:mm:ss';
-            } else {
-                self.locale.format = 'MM/DD/YYYY HH:mm';
-            }
-        } else {
-            self.locale.format = moment.localeData().longDateFormat('L');
-        }
-
-        //some state information
-        self.isShowing = false;
-        self.left.calendar = {};
-        self.right.calendar = {};
-
-        var options = (self.options !== undefined) ? self.options : {};
-
-        //
-        // handle all the possible options overriding defaults
-        //
-
-        if (typeof options.locale === 'object') {
-
-            if (typeof options.locale.direction === 'string')
-                self.locale.direction = options.locale.direction;
-
-            if (typeof options.locale.format === 'string')
-                self.locale.format = options.locale.format;
-
-            if (typeof options.locale.separator === 'string')
-                self.locale.separator = options.locale.separator;
-
-            if (typeof options.locale.daysOfWeek === 'object')
-                self.locale.daysOfWeek = options.locale.daysOfWeek.slice();
-
-            if (typeof options.locale.monthNames === 'object')
-              self.locale.monthNames = options.locale.monthNames.slice();
-
-            if (typeof options.locale.firstDay === 'number')
-              self.locale.firstDay = options.locale.firstDay;
-
-            if (typeof options.locale.applyLabel === 'string')
-              self.locale.applyLabel = options.locale.applyLabel;
-
-            if (typeof options.locale.cancelLabel === 'string')
-              self.locale.cancelLabel = options.locale.cancelLabel;
-
-            if (typeof options.locale.weekLabel === 'string')
-              self.locale.weekLabel = options.locale.weekLabel;
-
-            if (typeof options.locale.fromLabel === 'string')
-              self.locale.fromLabel = options.locale.fromLabel;
-
-            if (typeof options.locale.toLabel === 'string')
-              self.locale.toLabel = options.locale.toLabel;
-
-            if (typeof options.locale.customRangeLabel === 'string')
-              self.locale.customRangeLabel = options.locale.customRangeLabel;
-
-        }
-
-        if (typeof options.startDate === 'string')
-            self.startDate = moment(options.startDate, self.locale.format);
-
-        if (typeof options.endDate === 'string')
-            self.endDate = moment(options.endDate, self.locale.format);
-
-        if (typeof options.minDate === 'string')
-            self.minDate = moment(options.minDate, self.locale.format);
-
-        if (typeof options.maxDate === 'string')
-            self.maxDate = moment(options.maxDate, self.locale.format);
-
-        if (typeof options.startDate === 'object')
-            self.startDate = moment(options.startDate);
-
-        if (typeof options.endDate === 'object')
-            self.endDate = moment(options.endDate);
-
-        if (typeof options.minDate === 'object')
-            self.minDate = moment(options.minDate);
-
-        if (typeof options.maxDate === 'object')
-            self.maxDate = moment(options.maxDate);
-
-        // sanity check for bad options
-        if (self.minDate && self.startDate.isBefore(self.minDate))
-            self.startDate = self.minDate.clone();
-
-        // sanity check for bad options
-        if (self.maxDate && self.endDate.isAfter(self.maxDate))
-            self.endDate = self.maxDate.clone();
-
-        if (typeof options.applyClass === 'string')
-            self.applyClass = options.applyClass;
-
-        if (typeof options.cancelClass === 'string')
-            self.cancelClass = options.cancelClass;
-
-        if (typeof options.dateLimit === 'object')
-            self.dateLimit = options.dateLimit;
-
-        if (typeof options.showWeekNumbers === 'boolean')
-            self.showWeekNumbers = options.showWeekNumbers;
-
-        if (typeof options.showISOWeekNumbers === 'boolean')
-            self.showISOWeekNumbers = options.showISOWeekNumbers;
-
-        if (typeof options.buttonClasses === 'string')
-            self.buttonClasses = options.buttonClasses;
-
-        if (typeof options.buttonClasses === 'object')
-            self.buttonClasses = options.buttonClasses.join(' ');
-
-        if (typeof options.showDropdowns === 'boolean')
-            self.showDropdowns = options.showDropdowns;
-
-        if (typeof options.showCustomRangeLabel === 'boolean')
-            self.showCustomRangeLabel = options.showCustomRangeLabel;
-
-        if (typeof options.singleDatePicker === 'boolean') {
-            self.singleDatePicker = options.singleDatePicker;
-            if (self.singleDatePicker)
-                self.endDate = self.startDate.clone();
-        }
-
-        if (typeof options.timePicker === 'boolean')
-            self.timePicker = options.timePicker;
-
-        if (typeof options.timePickerSeconds === 'boolean')
-            self.timePickerSeconds = options.timePickerSeconds;
-
-        if (typeof options.timePickerIncrement === 'number')
-            self.timePickerIncrement = options.timePickerIncrement;
-
-        if (typeof options.timePicker24Hour === 'boolean')
-            self.timePicker24Hour = options.timePicker24Hour;
-
-        if (typeof options.linkedCalendars === 'boolean')
-            self.linkedCalendars = options.linkedCalendars;
-
-        if (typeof options.isInvalidDate === 'function') {
-            self.isInvalidDate = options.isInvalidDate;
-        } else {            
-            self.isInvalidDate = function() {
-                return false;
-            };
-        }
-
-        if (typeof options.isCustomDate === 'function') {
-            self.isCustomDate = options.isCustomDate;
-        } else {
-            self.isCustomDate = function() {
-                return false;
-            };
-        }
-
-        if (typeof options.alwaysShowCalendars === 'boolean')
-            self.alwaysShowCalendars = options.alwaysShowCalendars;
-
-        // update day names order to firstDay
-        if (self.locale.firstDay != 0) {
-            var iterator = self.locale.firstDay;
-            while (iterator > 0) {
-                self.locale.daysOfWeek.push(self.locale.daysOfWeek.shift());
-                iterator--;
-            }
-        }
-
-        if (typeof options.ranges === 'object') {
-            self.ranges = {};
-            for (range in options.ranges) {
-
-                if (typeof options.ranges[range][0] === 'string')
-                    start = moment(options.ranges[range][0], self.locale.format);
-                else
-                    start = moment(options.ranges[range][0]);
-
-                if (typeof options.ranges[range][1] === 'string')
-                    end = moment(options.ranges[range][1], self.locale.format);
-                else
-                    end = moment(options.ranges[range][1]);
-
-                // If the start or end date exceed those allowed by the minDate or dateLimit
-                // options, shorten the range to the allowable period.
-                if (self.minDate && start.isBefore(self.minDate))
-                    start = self.minDate.clone();
-
-                var maxDate = self.maxDate;
-                if (self.dateLimit && maxDate && start.clone().add(self.dateLimit).isAfter(maxDate))
-                    maxDate = start.clone().add(self.dateLimit);
-                if (maxDate && end.isAfter(maxDate))
-                    end = maxDate.clone();
-
-                // If the end of the range is before the minimum or the start of the range is
-                // after the maximum, don't display self range option at all.
-                if ((self.minDate && end.isBefore(self.minDate, self.timePicker ? 'minute' : 'day')) 
-                  || (maxDate && start.isAfter(maxDate, self.timePicker ? 'minute' : 'day')))
-                    continue;
-
-                //Support unicode chars in the range names.
-                var elem = document.createElement('textarea');
-                elem.innerHTML = range;
-                var rangeHtml = elem.value;
-
-                self.ranges[rangeHtml] = [start, end];
-            }
-        }
-
-        if (!self.timePicker) {
-            self.startDate = self.startDate.startOf('day');
-            self.endDate = self.endDate.endOf('day');
-        }
-
-        if (self.singleDatePicker) {
-            // TODO:
-            // The div.daterangepicker width:auto problem needs to be fixed
-            // before singleDatePicker can be worked on because the width
-            // needs to be 'auto' to readjust the div.daterangepicker width
-            // to be smaller because of only one calendar appearing.
-
-            // self.container.addClass('single');
-            // self.container.find('.calendar.left').addClass('single');
-            // self.container.find('.calendar.left').show();
-            // self.container.find('.calendar.right').hide();
-            // self.container.find('.daterangepicker_input input, .daterangepicker_input > i').hide();
-            // if (self.timePicker) {
-            //     self.container.find('.ranges ul').hide();
-            // } else {
-            //     self.container.find('.ranges').hide();
-            // }
-        }
-
-        if ((typeof options.ranges === 'undefined' && !self.singleDatePicker) || self.alwaysShowCalendars) {
-            self.showCalendarClass = 'show-calendar';
-        }
 
         $scope.$on('daterangepicker.change', self.formInputsChanged);
 
