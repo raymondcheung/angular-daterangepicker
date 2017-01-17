@@ -64,7 +64,7 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 - timePickerSeconds: (boolean) Show seconds in the timePicker
 
 # Contributing
-I'm always looking for extra help, but currently I am only able to work on this a few hours a week.  Also, there are no unit tests to gaurantee against unintended breakage.  So, pull requests will be very carefully and slowly reviewed.  Once I have unit tests up, and can run them to verify nothing breaks upon merging, approvals will come faster.
+I'm always looking for extra help, but currently I am only able to work on this a few hours a week.  Also, there very few unit tests to gaurantee against unintended breakage.  So, pull requests will be very carefully and slowly reviewed.  Once I have a more comprehensive unit test suite up, and can run them to verify nothing breaks upon merging, approvals will come faster.
 
 # Licensing
 
