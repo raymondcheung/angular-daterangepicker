@@ -25,7 +25,7 @@ Moment.js 2.15.2+
 
 # Tests
 After doing an 'npm install' and 'bower install', execute './node_modules/karma/bin/karma start' from the top level of this project to execute unit tests.
-# Configuration Options
+# Options
 ## Dropped(configurations from Bootstrap Daterange Picker that will not be ported)
 - parentEl
 - drops: (string: 'down' or 'up') Whether the picker appears below (default) or above the HTML element it's attached to
