@@ -1,6 +1,6 @@
 <input type="text" id="{{$ctrl.inputId}}" class="form-control" ng-model="$ctrl.daterangeInputValue" ng-focus="$ctrl.isShowing=true" />
 <div class="daterangepicker-wrapper">
-<div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}}" ng-cloak ng-class="$ctrl.getDaterangepickerClasses()">
+<div ng-if="$ctrl.isShowing" class="daterangepicker dropdown-menu show-calendar {{$ctrl.opensClass}} {{$ctrl.showCalendarClass}} {{$ctrl.locale.direction}} {{$ctrl.singleDatePickerClass}}" ng-cloak>
   <div class="ranges">
       <div class="range_inputs">
           <ul>
@@ -9,7 +9,7 @@
           </ul>
       </div>
   </div>
-  <div class="calendar left">
+  <div class="calendar left {{$ctrl.singleDatePickerClass}}">
       <div class="daterangepicker_input">
         <input class="input-mini form-control" type="text" name="daterangepicker_start" ng-focus="$ctrl.rightInputHasFocus=false; $ctrl.leftInputHasFocus=true" ng-class="{active: $ctrl.endDate}" ng-model="$ctrl.daterangepickerStart"/>
         <i ng-click="$ctrl.renderCalendar()" class="fa fa-calendar glyphicon glyphicon-calendar"></i>
@@ -70,7 +70,7 @@
       </div>
   </div>
 
-  <div class="calendar right">
+  <div class="calendar right" ng-hide="$ctrl.singleDatePickerClass">
       <div class="daterangepicker_input">
         <input class="input-mini form-control" type="text" ng-focus="$ctrl.rightInputHasFocus=true; $ctrl.leftInputHasFocus=false" name="daterangepicker_end" ng-class="{active: !$ctrl.endDate}" ng-model="$ctrl.daterangepickerEnd"/>
         <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>

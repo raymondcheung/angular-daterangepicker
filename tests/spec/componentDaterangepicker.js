@@ -7,7 +7,7 @@ describe('daterangePickerComponent: ', function() {
 
   beforeEach(module('ngDaterangePicker'));
   beforeEach(inject(function(_$componentController_, $httpBackend, $rootScope, $compile) {
-    $httpBackend.whenGET('./daterangepicker.html').respond(200, '');
+    $httpBackend.whenGET('./angular-daterangepicker.html').respond(200, '');
     $scope = $rootScope.$new();
     element = angular.element('<daterange-picker input-id="config-demo options="{{options}}"></daterange-picker>');
     element = $compile(element)($scope);
@@ -85,37 +85,6 @@ describe('daterangePickerComponent: ', function() {
     expect(ctrl.linkedCalendars).toBe(true);
     expect(ctrl.singleDatePicker).toBe(false);
     expect(ctrl.alwaysShowCalendars).toBe(true);
-  });
-  it('should set the single daterange picker class when the singleDatePicker config is set', function() {
-    var bindings = {
-      options: {
-        singleDatePicker: true
-      }
-    };
-    var ctrl = $componentController('daterangePicker', null, bindings);
-    var classes = ctrl.getDaterangepickerClasses();
-    expect(classes).toContain('single');
-  });
-  it('should set the single daterange picker class when the alwaysShowCalendars config is set', function() {
-    var bindings = {
-      options: {
-        alwaysShowCalendars: true
-      }
-    };
-    var ctrl = $componentController('daterangePicker', null, bindings);
-    var classes = ctrl.getDaterangepickerClasses();
-    expect(classes).toContain('single');
-  });
-  it('should set the show calendar class when the singleDatePicker and alwaysShowCalendars config is not set', function() {
-    var bindings = {
-      options: {
-        alwaysShowCalendars: false,
-        singleDatePicker: false
-      }
-    };
-    var ctrl = $componentController('daterangePicker', null, bindings);
-    var classes = ctrl.getDaterangepickerClasses();
-    expect(classes).toContain('show-calendar');
   });
   it('should set default locale data if no locale is passed', function() {
     var locale = {
@@ -224,5 +193,40 @@ describe('daterangePickerComponent: ', function() {
     ctrl.setStartDate('01/02/2016');
     ctrl.setEndDate('01/20/2016');
     expect(ctrl.endDate.format()).toEqual(ctrl.startDate.add(dateLimit.days, 'days').format());
+  });
+  it('should return array with expected number of elements when self.getArrayWithNumberOfElements is called', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    var arr = ctrl.getArrayWithNumberOfElements(8);
+    expect(arr).toEqual(jasmine.any(Array));
+    expect(arr.length).toBe(8);
+  });
+  it('should return an array with expected sequentual numbers list of given length when self.getArrayWithNumbersBetween is called', function() {
+    var ctrl = $componentController('daterangePicker', null, {options: {}});
+    var arr = ctrl.getArrayWithNumbersBetween(101, 110);
+    expect(arr).toEqual(jasmine.any(Array));
+    expect(arr).toEqual([102, 103, 104, 105, 106, 107, 108, 109]);
+  });
+  it('should return correct classes for a day cell when self.getClassesForDay is called', function() {
+    var bindings = {
+      options: {
+        startDate: '11/08/2016',
+        endDate: '11/25/2016',
+        minDate: '09/01/2015',
+        maxDate: '09/01/2017'
+      }
+    };
+    var ctrl = $componentController('daterangePicker', null, bindings);
+    var classes,
+        expectedClasses;
+    classes = ctrl.getClassesForDay();
+    expectedClasses = ''
+    expect(classes).toEqual(expectedClasses);
+    classes = ctrl.getClassesForDay();
+    expectedClasses = '';
+    expect(classes).toEqual(expectedClasses);
+    classes = ctrl.getClassesForDay();
+    expectedClasses = '';
+    expect(classes).toEqual(expectedClasses);
+
   });
 });
