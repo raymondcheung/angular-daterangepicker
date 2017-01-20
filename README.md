@@ -25,12 +25,13 @@ Moment.js 2.15.2+
 
 # Tests
 After doing an 'npm install' and 'bower install', execute './node_modules/karma/bin/karma start' from the top level of this project to execute unit tests.
-# Options
+# Configuration Options
 ## Dropped(configurations from Bootstrap Daterange Picker that will not be ported)
 - parentEl
 - drops: (string: 'down' or 'up') Whether the picker appears below (default) or above the HTML element it's attached to
 - opens: (string: 'left'/'right'/'center') Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to
 - autoUpdateInput: (boolean) Indicates whether the date range picker should automatically update the value of an <input> element it's attached to at initialization and when the selected dates change.
+- alwaysShowCalendars: (boolean) Normally, if you use the ranges option to specify pre-defined date ranges, calendars for choosing a custom date range are not shown until the user clicks "Custom Range". When this option is set to true, the calendars for choosing a custom date range are always shown instead.
 
 ## Unsupported(no decision yet on whether it will be worked on)
 - autoApply: (boolean) Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates or a predefined range is selected
@@ -40,10 +41,8 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 - isCustomDate: (function) A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.
 
 ## Not yet fully implemented
-- singleDatePicker: (boolean) Show only a single calendar to choose one date, instead of a range picker with two calendars; the start and end dates provided to your callback will be the same single date chosen
 - dateLimit: (object) The maximum span between the selected start and end dates. Can have any property you can add to a moment object (i.e. days, months)
 - buttonClasses: (array) CSS class names that will be added to all buttons in the picker
-- alwaysShowCalendars: (boolean) Normally, if you use the ranges option to specify pre-defined date ranges, calendars for choosing a custom date range are not shown until the user clicks "Custom Range". When this option is set to true, the calendars for choosing a custom date range are always shown instead.
 - showCustomRangeLabel: (boolean) Displays an item labeled "Custom Range" at the end of the list of predefined ranges, when the ranges option is used. This option will be highlighted whenever the current date range selection does not match one of the predefined ranges. Clicking it will display the calendars to select a new range.
 
 ## Currently functional
@@ -62,6 +61,7 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 - timePickerIncrement: (number) Increment of the minutes selection list for times (i.e. 30 to allow only selection of times ending in 0 or 30)
 - timePicker24Hour: (boolean) Use 24-hour instead of 12-hour times, removing the AM/PM selection
 - timePickerSeconds: (boolean) Show seconds in the timePicker
+- singleDatePicker: (boolean) Show only a single calendar to choose one date, instead of a range picker with two calendars; the start and end dates provided to your callback will be the same single date chosen
 
 # Contributing
 I'm always looking for extra help, but currently I am only able to work on this a few hours a week.  Also, there very few unit tests to gaurantee against unintended breakage.  So, pull requests will be very carefully and slowly reviewed.  Once I have a more comprehensive unit test suite up, and can run them to verify nothing breaks upon merging, approvals will come faster.
