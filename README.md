@@ -44,6 +44,7 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 - dateLimit: (object) The maximum span between the selected start and end dates. Can have any property you can add to a moment object (i.e. days, months)
 - buttonClasses: (array) CSS class names that will be added to all buttons in the picker
 - showCustomRangeLabel: (boolean) Displays an item labeled "Custom Range" at the end of the list of predefined ranges, when the ranges option is used. This option will be highlighted whenever the current date range selection does not match one of the predefined ranges. Clicking it will display the calendars to select a new range.
+- showDropdowns: (boolean) Show year and month select boxes above calendars to jump to a specific month and year
 
 ## Currently functional
 - startDate (Date object, moment object or string) The start of the initially selected date range
@@ -51,7 +52,6 @@ After doing an 'npm install' and 'bower install', execute './node_modules/karma/
 - minDate: (Date object, moment object or string) The earliest date a user may select
 - maxDate: (Date object, moment object or string) The latest date a user may select
 - locale: (object) Allows you to provide localized strings for buttons and labels, customize the date format, and change the first day of week for the calendars. Check off "locale (with example settings)" in the configuration generator to see how to customize these options.
-- showDropdowns: (boolean) Show year and month select boxes above calendars to jump to a specific month and year
 - showWeekNumbers: (boolean) Show localized week numbers at the start of each week on the calendars
 - showISOWeekNumbers: (boolean) Show ISO week numbers at the start of each week on the calendars
 - linkedCalendars: (boolean) When enabled, the two calendars displayed will always be for two sequential months (i.e. January and February), and both will be advanced when clicking the left or right arrows above the calendars. When disabled, the two calendars can be individually advanced and display any month/year.
