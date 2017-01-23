@@ -38,8 +38,8 @@
         <table class="table-condensed">
           <thead>
             <tr>
-              <th ng-if="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers"></th>
-              <th ng-if="!$ctrl.minDate || $ctrl.minDate.isBefore($ctrl.left.calendar.firstDay)" ng-click="$ctrl.clickPrev('left')" class="prev available"><i class="fa fa-{{$ctrl.arrow.left}} glyphicon glyphicon-{{$ctrl.arrow.left}}"></i></th>
+              <th ng-show="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers"></th>
+              <th ng-show="!$ctrl.minDate || $ctrl.minDate.isBefore($ctrl.left.calendar.firstDay)" ng-click="$ctrl.clickPrev('left')" class="prev available"><i class="fa fa-{{$ctrl.arrow.left}} glyphicon glyphicon-{{$ctrl.arrow.left}}"></i></th>
               <th colspan="5" class="month">
                 <!-- If we are not showing dropdowns, just output plain text -->
                 <div ng-if="!$ctrl.showDropdowns">{{$ctrl.locale.monthNames[$ctrl.left.calendar[1][1].date.month()] + $ctrl.left.calendar[1][1].date.format(" YYYY")}}</div>
@@ -54,7 +54,7 @@
                   </option>
                 </select>
               </th>
-              <th ng-hide="(!$ctrl.maxDate || $ctrl.maxDate.isAfter($ctrl.left.calendar.lastDay)) && (!$ctrl.linkedCalendars || $ctrl.singleDatePicker)" ng-click="$ctrl.clickNext('left')" class="next available"><i class="fa fa-{{$ctrl.arrow.right}} glyphicon glyphicon-{{$ctrl.arrow.right}}"></i></th>
+              <th ng-show="(!$ctrl.maxDate || $ctrl.maxDate.isAfter($ctrl.left.calendar.lastDay)) && (!$ctrl.linkedCalendars || $ctrl.singleDatePicker)" ng-click="$ctrl.clickNext('left')" class="next available"><i class="fa fa-{{$ctrl.arrow.right}} glyphicon glyphicon-{{$ctrl.arrow.right}}"></i></th>
             </tr>
           </thead>
           <tbody>
@@ -100,7 +100,7 @@
           <thead>
             <tr>
               <th ng-show="$ctrl.showWeekNumbers || $ctrl.showISOWeekNumbers"></th>
-              <th ng-hide="(!$ctrl.minDate || $ctrl.minDate.isBefore($ctrl.right.calendar.firstDay)) && (!$ctrl.linkedCalendars)" ng-click="$ctrl.clickPrev('right')" class="prev available"><i class="fa fa-{{$ctrl.arrow.left}} glyphicon glyphicon-{{$ctrl.arrow.left}}"></i></th>
+              <th ng-show="(!$ctrl.minDate || $ctrl.minDate.isBefore($ctrl.right.calendar.firstDay)) && (!$ctrl.linkedCalendars)" ng-click="$ctrl.clickPrev('right')" class="prev available"><i class="fa fa-{{$ctrl.arrow.left}} glyphicon glyphicon-{{$ctrl.arrow.left}}"></i></th>
               <th colspan="5" class="month">
                 <!-- If we are not showing dropdowns, just output plain text -->
                 <div ng-show="!$ctrl.showDropdowns">{{$ctrl.locale.monthNames[$ctrl.right.calendar[1][1].date.month()] + $ctrl.right.calendar[1][1].date.format(" YYYY")}}</div>

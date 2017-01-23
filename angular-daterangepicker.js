@@ -308,6 +308,7 @@
         self.init();
         $scope.$on('daterangepicker.reload', () => {
             self.init();
+            self.updateView();
         });
 
         $scope.$on('daterangepicker.change', self.formInputsChanged);
@@ -922,31 +923,7 @@
         self.formInputsChanged = (event, args) => {
 
         }
-
-
-        // formInputsChanged: () => {
-        //     let isRight = $(e.target).closest('.calendar').hasClass('right');
-        //     let start = moment(this.container.find('input[name="daterangepicker_start"]').val(), this.locale.format);
-        //     let end = moment(this.container.find('input[name="daterangepicker_end"]').val(), this.locale.format);
-
-        //     if (start.isValid() && end.isValid()) {
-
-        //         if (isRight && end.isBefore(start))
-        //             start = end.clone();
-
-        //         this.setStartDate(start);
-        //         this.setEndDate(end);
-
-        //         if (isRight) {
-        //             this.container.find('input[name="daterangepicker_start"]').val(this.startDate.format(this.locale.format));
-        //         } else {
-        //             this.container.find('input[name="daterangepicker_end"]').val(this.endDate.format(this.locale.format));
-        //         }
-
-        //     }
-
-        //     this.updateView();
-        // },
         self.updateView();
-		}]
-  });
+		}
+    ]
+});
